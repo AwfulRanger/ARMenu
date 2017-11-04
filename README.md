@@ -1,7 +1,5 @@
 # ARMenu
-Lua main menu for Garry's Mod.
-
-A work in progress.
+Lua main menu for Garry's Mod (work in progress).
 
 # Installing
 Move the contents of ARMenu into the "garrysmod" folder.
