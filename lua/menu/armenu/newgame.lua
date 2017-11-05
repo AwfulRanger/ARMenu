@@ -1,5 +1,6 @@
 --TODO: make (un)favoriting a map not jitter everything around
 --TODO: search bar
+--TODO: fix leftover map panel (?????)
 local PANEL = {}
 
 
@@ -470,7 +471,7 @@ function PANEL:CreateOptions()
 				for i = 1, #gmoptions do
 					
 					local option = gmoptions[ i ]
-					if option != nil then
+					if option != nil and ( gamemaxplayers > 1 or option.singleplayer != nil ) then
 						
 						local t = string.lower( option.type or "" )
 						if t == "checkbox" then
