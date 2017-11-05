@@ -212,7 +212,7 @@ function PANEL:CreateMapList( category )
 				end
 				surface.SetMaterial( mat )
 				
-				surface.SetDrawColor( white )
+				surface.SetDrawColor( MenuColor.white )
 				surface.DrawTexturedRect( 0, 0, w, h )
 				
 			end
