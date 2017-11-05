@@ -83,6 +83,7 @@ function PANEL:OpenMainMenu()
 	local ny = ScrH() * 0.0025
 	local sep = ScrH() * 0.025
 	
+	if IsValid( self.change ) == true then self.change:Remove() end
 	self.change = vgui.Create( "ChangeButton" )
 	self.change:SetParent( self )
 	self.change:SetPos( ScrW() - self.change:GetWide() - ny, ny )
