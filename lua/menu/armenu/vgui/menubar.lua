@@ -265,7 +265,8 @@ function PANEL:CreateChildren()
 				
 				local spad = math.Round( panel:GetTall() * 0.1 )
 				local s = math.min( 16, panel:GetTall() - ( spad * 2 ) )
-				local hpad = ( panel:GetTall() * 0.5 ) - ( s * 0.5 )
+				local hpad = math.floor( panel:GetTall() * 0.5 ) - math.Round( s * 0.5 )
+				local hpadb = math.ceil( panel:GetTall() * 0.5 ) - math.Round( s * 0.5 )
 				local psize = panel:GetTall() - ( spad * 2 )
 				if image == nil then
 					
@@ -347,7 +348,7 @@ function PANEL:CreateChildren()
 					local icon = vgui.Create( "DImage" )
 					icon:SetParent( panel )
 					icon:Dock( LEFT )
-					icon:DockMargin( 0, hpad, spad, hpad )
+					icon:DockMargin( 0, hpad, spad, hpadb )
 					icon:SetSize( s, s )
 					if mat != nil and mat:IsError() != true then icon:SetMaterial( mat ) end
 					
