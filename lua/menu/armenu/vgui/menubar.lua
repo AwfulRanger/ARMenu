@@ -82,6 +82,27 @@ function PANEL:CreateChildren()
 	
 	local pad = ScrH() * 0.005
 	
+	if IsValid( self.resume ) == true then self.resume:Remove() end
+	self.resume = vgui.Create( "DButton" )
+	self.resume:SetParent( self )
+	self.resume:Dock( LEFT )
+	self.resume:DockMargin( 0, 0, pad, 0 )
+	self.resume:SetSize( ScrW() * 0.1, ScrH() * 0.04 )
+	self.resume:SetText( "#back_to_game" )
+	self.resume:SetImage( "../../html/img/back_to_game.png" )
+	function self.resume:Paint( w, h )
+		
+		local color = MenuColor.bg_alt
+		if self:IsHovered() == true then color = MenuColor.active end
+		draw.RoundedBox( 4, 0, 0, w, h, color )
+		
+	end
+	function self.resume:DoClick()
+		
+		gui.HideGameUI()
+		
+	end
+	
 	if IsValid( self.languages ) == true then self.languages:Remove() end
 	self.languages = vgui.Create( "DButton" )
 	self.languages:SetParent( self )
