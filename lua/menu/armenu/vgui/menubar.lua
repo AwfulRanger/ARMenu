@@ -78,7 +78,7 @@ function PANEL:CreateBack()
 	
 end
 
-function PANEL:CreateChildren()
+function PANEL:CreateResume()
 	
 	local pad = ScrH() * 0.005
 	
@@ -102,6 +102,12 @@ function PANEL:CreateChildren()
 		gui.HideGameUI()
 		
 	end
+	
+end
+
+function PANEL:CreateChildren()
+	
+	local pad = ScrH() * 0.005
 	
 	if IsValid( self.languages ) == true then self.languages:Remove() end
 	self.languages = vgui.Create( "DButton" )
@@ -600,6 +606,16 @@ function PANEL:Paint( w, h )
 	
 	surface.SetDrawColor( barcolor )
 	surface.DrawRect( 0, 0, w, h )
+	
+	if IsInGame() == true and IsValid( self.resume ) != true then
+		
+		self:CreateResume()
+		
+	elseif IsInGame() == false and IsValid( self.resume ) == true then
+		
+		self.resume:Remove()
+		
+	end
 	
 	if IsValid( GetMainMenu():GetInnerPanel() ) == true and IsValid( self.back ) != true then
 		
