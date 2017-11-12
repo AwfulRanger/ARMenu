@@ -1,3 +1,17 @@
+function includesafe( path )
+	
+	if file.Exists( "lua/" .. path, "GAME" ) == true then
+		
+		CompileString( file.Read( "lua/" .. path, "GAME" ), path )()
+		
+	else
+		
+		print( "Couldn't include file '" .. path .. "' (File not found)" )
+		
+	end
+	
+end
+
 concommand.Add( "armenu_reload", function( ply, cmd, args, arg )
 	
 	--Clear old panels
@@ -13,7 +27,6 @@ concommand.Add( "armenu_reload", function( ply, cmd, args, arg )
 	
 end, nil, "Reload ARMenu" )
 
---[[
 concommand.Add( "lua_run_menu", function( ply, cmd, args, arg )
 	
 	local msg = RunString( arg, "lua_run_menu", false )
@@ -23,15 +36,7 @@ end )
 
 concommand.Add( "lua_openscript_menu", function( ply, cmd, args, arg )
 	
-	if file.Exists( "lua/" .. arg, "GAME" ) == true then
-		
-		CompileString( file.Read( "lua/" .. arg, "GAME" ), arg )()
-		
-	else
-		
-		print( "Couldn't include file '" .. arg .. "' (File not found)" )
-		
-	end
+	includesafe( arg )
 	
 end, function( cmd, arg )
 	
@@ -60,7 +65,6 @@ end, function( cmd, arg )
 	return ret
 	
 end )
-]]--
 
 
 
