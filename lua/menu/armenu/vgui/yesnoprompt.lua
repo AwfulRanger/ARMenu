@@ -2,39 +2,16 @@ local PANEL = {}
 
 
 
-language.Add( "quit.text", "Are you sure you want to quit?" )
-language.Add( "quit.yes", "Yes" )
-language.Add( "quit.no", "No" )
+language.Add( "armenu_promptyes", "Yes" )
+language.Add( "armenu_promptno", "No" )
 
 function PANEL:Init()
 	
-	self:SetText( "#quit" )
-	self:InvalidateLayout( true )
-	
-end
-
-function PANEL:DoClick()
-	
-	if IsValid( self.quitmenu ) == true then self.quitmenu:Remove() end
-	
-	self.quitmenu = vgui.Create( "DPanel" )
-	self.quitmenu:SetPos( 0, 0 )
-	self.quitmenu:SetSize( ScrW(), ScrH() )
-	function self.quitmenu:Paint( w, h )
-		
-		surface.SetDrawColor( 0, 0, 0, 200 )
-		surface.DrawRect( 0, 0, w, h )
-		
-	end
-	self.quitmenu:MakePopup()
-	
-	local label = vgui.Create( "DLabel" )
-	label:SetParent( self.quitmenu )
-	label:SetFont( "DermaLarge" )
-	label:SetText( "#quit.text" )
-	label:SizeToContents()
-	label:Center()
-	function label:Paint( w, h )
+	self.label = vgui.Create( "DLabel" )
+	self.label:SetParent( self )
+	self.label:SetFont( "DermaLarge" )
+	self.label:SetText( "" )
+	function self.label:Paint( w, h )
 		
 		local text = self:GetText()
 	
@@ -58,13 +35,11 @@ function PANEL:DoClick()
 		
 	end
 	
-	local yes = vgui.Create( "DButton" )
-	yes:SetParent( self.quitmenu )
-	yes:SetFont( "DermaLarge" )
-	yes:SetText( "#quit.yes" )
-	yes:SetPos( ScrW() * 0.35, ScrH() * 0.6 )
-	yes:SetSize( ScrW() * 0.1, ScrH() * 0.1 )
-	function yes:Paint( w, h )
+	self.yes = vgui.Create( "DButton" )
+	self.yes:SetParent( self )
+	self.yes:SetFont( "DermaLarge" )
+	self.yes:SetText( "#armenu_promptyes" )
+	function self.yes:Paint( w, h )
 		
 		local color = MenuColor.dullinactive
 		if self:IsHovered() == true then color = MenuColor.dullactive end
@@ -92,20 +67,18 @@ function PANEL:DoClick()
 		return true
 		
 	end
-	yes.DoClick = function( panel )
+	self.yes.DoClick = function( panel )
 		
-		self.quitmenu:Remove()
-		RunGameUICommand( "quit" )
+		self:Remove()
+		self:OnYes()
 		
 	end
 	
-	local no = vgui.Create( "DButton" )
-	no:SetParent( self.quitmenu )
-	no:SetFont( "DermaLarge" )
-	no:SetText( "#quit.no" )
-	no:SetPos( ScrW() * 0.55, ScrH() * 0.6 )
-	no:SetSize( ScrW() * 0.1, ScrH() * 0.1 )
-	function no:Paint( w, h )
+	self.no = vgui.Create( "DButton" )
+	self.no:SetParent( self )
+	self.no:SetFont( "DermaLarge" )
+	self.no:SetText( "#armenu_promptno" )
+	function self.no:Paint( w, h )
 		
 		local color = MenuColor.dullinactive
 		if self:IsHovered() == true then color = MenuColor.dullactive end
@@ -133,14 +106,47 @@ function PANEL:DoClick()
 		return true
 		
 	end
-	no.DoClick = function( panel )
+	self.no.DoClick = function( panel )
 		
-		self.quitmenu:Remove()
+		self:Remove()
+		self:OnNo()
 		
 	end
 	
 end
 
+function PANEL:PerformLayout( w, h )
+	
+	self.label:SizeToContents()
+	self.label:Center()
+	
+	self.yes:SetPos( w * 0.35, h * 0.6 )
+	self.yes:SetSize( w * 0.1, h * 0.1 )
+	
+	self.no:SetPos( w * 0.55, h * 0.6 )
+	self.no:SetSize( w * 0.1, h * 0.1 )
+	
+end
+
+function PANEL:Paint( w, h )
+	
+	surface.SetDrawColor( MenuColor.bgdim )
+	surface.DrawRect( 0, 0, w, h )
+	
+end
+
+function PANEL:OnYes()
+end
+
+function PANEL:OnNo()
+end
+
+function PANEL:SetText( ... )
+	
+	self.label:SetText( ... )
+	
+end
 
 
-vgui.Register( "Button_Quit", PANEL, "MainMenuButton" )
+
+vgui.Register( "YesNoPrompt", PANEL, "DPanel" )

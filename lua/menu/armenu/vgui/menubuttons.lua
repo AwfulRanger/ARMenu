@@ -4,103 +4,160 @@ local PANEL = {}
 
 
 
+language.Add( "armenu_disconnectprompt", "Are you sure you want to disconnect?" )
+language.Add( "armenu_quitprompt", "Are you sure you want to quit?" )
+
 include( "mainmenubutton.lua" )
-include( "button_resume.lua" )
-include( "button_newgame.lua" )
-include( "button_findmp.lua" )
-include( "button_addons.lua" )
-include( "button_demos.lua" )
-include( "button_saves.lua" )
-include( "button_achievements.lua" )
-include( "button_options.lua" )
-include( "button_disconnect.lua" )
-include( "button_quit.lua" )
+
+local menubuttons = {}
+
+function GetMenuButtonCanvas()
+	
+	local menu = GetMainMenu()
+	if IsValid( menu ) == true then return menu.menubuttons end
+	
+end
+
+function AddMenuButton( button, pos )
+	
+	table.insert( menubuttons, { button = button, pos = pos } )
+	
+end
+
+
+
+local function createbuttons( canvas )
+	
+	for i = 1, #menubuttons do
+		
+		if IsValid( menubuttons[ i ] ) == true then menubuttons[ i ]:Remove() end
+		menubuttons[ i ] = nil
+		
+	end
+	for i = 1, #canvas:GetChildren() do
+		
+		if IsValid( canvas:GetChildren()[ i ] ) == true then canvas:GetChildren()[ i ]:Remove() end
+		
+	end
+	
+	hook.Run( "PreCreateMenuButtons", menubuttons )
+	
+	local sep = ScrH() * 0.025
+	
+	if IsInGame() == true then
+		
+		local resume = vgui.Create( "MainMenuButton" )
+		resume:DockMargin( 0, 0, 0, sep )
+		resume:SetText( "#resume_game" )
+		function resume:DoClick()
+			
+			gui.HideGameUI()
+			
+		end
+		AddMenuButton( resume, -1000 )
+		
+		
+		local disconnect = vgui.Create( "MainMenuButton" )
+		disconnect:SetText( "#disconnect" )
+		function disconnect:DoClick()
+			
+			local prompt = vgui.Create( "YesNoPrompt" )
+			prompt:SetPos( 0, 0 )
+			prompt:SetSize( ScrW(), ScrH() )
+			prompt:SetText( "#armenu_disconnectprompt" )
+			function prompt:OnYes()
+				
+				RunGameUICommand( "disconnect" )
+				
+			end
+			prompt:MakePopup()
+			
+		end
+		AddMenuButton( disconnect, 900 )
+		
+	end
+	
+	
+	local newgame = vgui.Create( "MainMenuButton" )
+	newgame:SetText( "#new_game" )
+	function newgame:DoClick()
+		
+		GetMainMenu():SetInnerPanel( vgui.Create( "MainMenu_NewGame" ) )
+		
+	end
+	AddMenuButton( newgame, -900 )
+	
+	
+	local findmp = vgui.Create( "MainMenuButton" )
+	findmp:SetText( "#find_mp_game" )
+	findmp:DockMargin( 0, 0, 0, sep )
+	function findmp:DoClick()
+		
+		GetMainMenu():SetInnerPanel( vgui.Create( "MainMenu_FindMP" ) )
+		
+	end
+	AddMenuButton( findmp, -800 )
+	
+	
+	local options = vgui.Create( "MainMenuButton" )
+	options:SetText( "#options" )
+	options:DockMargin( 0, 0, 0, sep )
+	function options:DoClick()
+		
+		RunGameUICommand( "openoptionsdialog" )
+		
+	end
+	AddMenuButton( options, 800 )
+	
+	
+	local quit = vgui.Create( "MainMenuButton" )
+	quit:SetText( "#quit" )
+	function quit:DoClick()
+		
+		local prompt = vgui.Create( "YesNoPrompt" )
+		prompt:SetPos( 0, 0 )
+		prompt:SetSize( ScrW(), ScrH() )
+		prompt:SetText( "#armenu_quitprompt" )
+		function prompt:OnYes()
+			
+			RunGameUICommand( "quit" )
+			
+		end
+		prompt:MakePopup()
+		
+	end
+	AddMenuButton( quit, 1000 )
+	
+	
+	hook.Run( "PostCreateMenuButtons", menubuttons )
+	
+	local lastvalue
+	for _, v in SortedPairsByMemberValue( menubuttons, "pos", true ) do
+		
+		if lastvalue == pluginbutton and v.button != findmp and IsValid( pluginbutton ) == true then v.button:DockMargin( 0, 0, 0, sep ) end
+		lastvalue = v.button
+		
+	end
+	
+	return menubuttons
+	
+end
+
+
 
 function PANEL:CreateChildren()
 	
-	local ny = 0
-	local sep = ScrH() * 0.025
 	local y = 0
-	
-	if IsValid( self.resume ) == true then self.resume:Remove() end
-	if IsInGame() == true then
+	for _, v in SortedPairsByMemberValue( createbuttons( self:GetCanvas() ), "pos" ) do
 		
-		self.resume = vgui.Create( "Button_Resume" )
-		self.resume:SetParent( self )
-		self.resume:SetPos( 0, y )
+		v.button:SetParent( self )
+		v.button:SetPos( 0, y )
+		v.button:InvalidateLayout( true )
 		
-		y = y + self.resume:GetTall() + sep
-		
-	end
-	
-	if IsValid( self.newgame ) == true then self.newgame:Remove() end
-	self.newgame = vgui.Create( "Button_NewGame" )
-	self.newgame:SetParent( self )
-	self.newgame:SetPos( 0, y )
-	
-	y = y + self.newgame:GetTall() + ny
-	
-	if IsValid( self.findmp ) == true then self.findmp:Remove() end
-	self.findmp = vgui.Create( "Button_FindMP" )
-	self.findmp:SetParent( self )
-	self.findmp:SetPos( 0, y )
-	
-	y = y + self.findmp:GetTall() + sep
-	
-	--[[
-	if IsValid( self.addons ) == true then self.addons:Remove() end
-	self.addons = vgui.Create( "Button_Addons" )
-	self.addons:SetParent( self )
-	self.addons:SetPos( 0, y )
-	
-	y = y + self.addons:GetTall() + ny
-	
-	if IsValid( self.demos ) == true then self.demos:Remove() end
-	self.demos = vgui.Create( "Button_Demos" )
-	self.demos:SetParent( self )
-	self.demos:SetPos( 0, y )
-	
-	y = y + self.demos:GetTall() + ny
-	
-	if IsValid( self.saves ) == true then self.saves:Remove() end
-	self.saves = vgui.Create( "Button_Saves" )
-	self.saves:SetParent( self )
-	self.saves:SetPos( 0, y )
-	
-	y = y + self.saves:GetTall() + sep
-	]]--
-	
-	if IsValid( self.achievements ) == true then self.achievements:Remove() end
-	self.achievements = vgui.Create( "Button_Achievements" )
-	self.achievements:SetParent( self )
-	self.achievements:SetPos( 0, y )
-	
-	y = y + self.achievements:GetTall() + ny
-	
-	if IsValid( self.options ) == true then self.options:Remove() end
-	self.options = vgui.Create( "Button_Options" )
-	self.options:SetParent( self )
-	self.options:SetPos( 0, y )
-	
-	y = y + self.options:GetTall() + sep
-	
-	if IsValid( self.disconnect ) == true then self.disconnect:Remove() end
-	if IsInGame() == true then
-		
-		self.disconnect = vgui.Create( "Button_Disconnect" )
-		self.disconnect:SetParent( self )
-		self.disconnect:SetPos( 0, y )
-		
-		y = y + self.disconnect:GetTall() + ny
+		local dl, dt, dr, db = v.button:GetDockMargin()
+		y = y + v.button:GetTall() + db
 		
 	end
-	
-	if IsValid( self.quit ) == true then self.quit:Remove() end
-	self.quit = vgui.Create( "Button_Quit" )
-	self.quit:SetParent( self )
-	self.quit:SetPos( 0, y )
-	
-	self:SizeToChildren( true, true )
 	
 end
 
@@ -124,4 +181,4 @@ end
 
 
 
-vgui.Register( "MenuButtons", PANEL, "DPanel" )
+vgui.Register( "MenuButtons", PANEL, "DScrollPanel" )

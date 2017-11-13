@@ -1,3 +1,5 @@
+include( "plugins.lua" )
+
 include( "../background.lua" )
 include( "../cef_credits.lua" )
 include( "../openurl.lua" )
@@ -20,6 +22,7 @@ MenuColor = {
 	
 }
 
+include( "vgui/yesnoprompt.lua" )
 include( "vgui/changebutton.lua" )
 include( "vgui/menubuttons.lua" )
 include( "vgui/menubar.lua" )
@@ -93,7 +96,9 @@ function PANEL:OpenMainMenu()
 	
 	self.menubuttons = vgui.Create( "MenuButtons" )
 	self.menubuttons:SetParent( self )
-	self.menubuttons:SetPos( ScrW() * 0.043, ( ScrH() * ( 0.07 + ( 128 / 1080 ) ) ) + sep )
+	local y = ( ScrH() * ( 0.07 + ( 128 / 1080 ) ) ) + sep
+	self.menubuttons:SetPos( ScrW() * 0.043, y )
+	self.menubuttons:SetSize( ScrW() * 0.3, ScrH() - ( y * 2 ) )
 	
 end
 
@@ -543,3 +548,5 @@ timer.Simple( 0, function()
 	hook.Run( "GameContentChanged" )
 	
 end )
+
+hook.Run( "MenuLoaded" )

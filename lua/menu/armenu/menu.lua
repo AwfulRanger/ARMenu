@@ -1,12 +1,48 @@
-function includesafe( path )
+includeunsafe = includeunsafe or include
+
+function include( path, ... )
+	
+	local oldpath = path
+	path = string.gsub( path, "/[^/]-/%.%./", "/" )
 	
 	if file.Exists( "lua/" .. path, "GAME" ) == true then
 		
-		CompileString( file.Read( "lua/" .. path, "GAME" ), path )()
+		if file.Exists( path, "LuaMenu" ) == true then return includeunsafe( path, ... ) end
+		return CompileString( file.Read( "lua/" .. path, "GAME" ), "lua/" .. path )()
 		
 	else
 		
-		print( "Couldn't include file '" .. path .. "' (File not found)" )
+		local info = debug.getinfo( 1 )
+		local i = 2
+		while i > -1 do
+			
+			local newinfo = debug.getinfo( i )
+			if newinfo != nil and newinfo.short_src != "[C]" then
+				
+				info = newinfo
+				i = i + 1
+				
+			else
+				
+				i = -1
+				
+			end
+			
+		end
+		
+		local source = string.gsub( string.GetPathFromFilename( info.short_src ) .. oldpath, "/[^/]-/%.%./", "/" )
+		if string.sub( source, 1, 4 ) == "lua/" then source = string.sub( source, 5 ) end
+		
+		if source != nil and source != "" and file.Exists( "lua/" .. source, "GAME" ) == true then
+			
+			if file.Exists( source, "LuaMenu" ) == true then return includeunsafe( source, ... ) end
+			return CompileString( file.Read( "lua/" .. source, "GAME" ), "lua/" .. source )()
+			
+		else
+			
+			print( "Couldn't include file '" .. path .. "' (File not found)" )
+			
+		end
 		
 	end
 	
@@ -36,7 +72,7 @@ end )
 
 concommand.Add( "lua_openscript_menu", function( ply, cmd, args, arg )
 	
-	includesafe( arg )
+	include( arg )
 	
 end, function( cmd, arg )
 	
