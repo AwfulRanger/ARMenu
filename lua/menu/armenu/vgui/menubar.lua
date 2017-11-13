@@ -609,6 +609,7 @@ function PANEL:Paint( w, h )
 	
 	if IsInGame() == true and IsValid( self.resume ) != true then
 		
+		if IsValid( self.back ) == true then self.back:Remove() end
 		self:CreateResume()
 		
 	elseif IsInGame() == false and IsValid( self.resume ) == true then
