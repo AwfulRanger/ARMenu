@@ -25,6 +25,7 @@ include( "vgui/menubuttons.lua" )
 include( "vgui/menubar.lua" )
 
 include( "newgame.lua" )
+include( "findmp.lua" )
 
 
 

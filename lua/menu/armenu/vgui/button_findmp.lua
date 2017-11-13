@@ -12,7 +12,6 @@ end
 function PANEL:DoClick()
 	
 	GetMainMenu():SetInnerPanel( vgui.Create( "MainMenu_FindMP" ) )
-	RunGameUICommand( "openserverbrowser" )
 	
 end
 
