@@ -1,12 +1,10 @@
-language.Add( "armenu_achievements.name", "Achievements" )
-language.Add( "armenu_achievements.desc", "Enable a button on the main menu that opens an achievements menu" )
+language.Add( "armenu_plugin_achievements.name", "Achievements" )
+language.Add( "armenu_plugin_achievements.desc", "Enable a button on the main menu that opens an achievements menu" )
 
 local name = "achievements"
 local menu
 AddPlugin( name, {
 	
-	Name = "#armenu_achievements.name",
-	Desc = "#armenu_achievements.desc",
 	OnEnabled = function()
 		
 		concommand.Add( "armenu_achievements", function()
@@ -16,7 +14,7 @@ AddPlugin( name, {
 			menu = vgui.Create( "DFrame" )
 			menu:SetSize( ScrW() * 0.4, ScrH() * 0.4 )
 			menu:Center()
-			menu:SetTitle( "#armenu_achievements.name" )
+			menu:SetTitle( "#armenu_plugin_achievements.name" )
 			menu:SetSizable( true )
 			menu:MakePopup()
 			
@@ -84,7 +82,7 @@ AddPlugin( name, {
 		hook.Add( "PreCreateMenuButtons", name, function()
 			
 			local button = vgui.Create( "MainMenuButton" )
-			button:SetText( "#armenu_achievements.name" )
+			button:SetText( "#armenu_plugin_achievements.name" )
 			function button:DoClick()
 				
 				RunConsoleCommand( "armenu_achievements" )

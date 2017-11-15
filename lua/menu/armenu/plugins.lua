@@ -32,6 +32,8 @@ end
 
 function AddPlugin( name, tbl )
 	
+	if tbl.Name == nil then tbl.Name = "#armenu_plugin_" .. name .. ".name" end
+	if tbl.Desc == nil then tbl.Desc = "#armenu_plugin_" .. name .. ".desc" end
 	plugins[ name ] = tbl
 	
 end
@@ -48,7 +50,7 @@ hook.Add( "MenuLoaded", "Plugins", function()
 	
 	for _, v in pairs( plugins ) do
 		
-		if enabled[ _ ] == true and v.OnEnabled != nil then v.OnEnabled() end
+		if getenabled( _ ) == true and v.OnEnabled != nil then v.OnEnabled() end
 		
 	end
 	

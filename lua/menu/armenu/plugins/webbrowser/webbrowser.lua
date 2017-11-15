@@ -1,13 +1,11 @@
 include( "vgui/dlistbox.lua" )
 
-language.Add( "armenu_arbrowser.name", "Web Browser" )
-language.Add( "armenu_arbrowser.desc", "Enable a button on the main menu that opens a web browser" )
+language.Add( "armenu_plugin_arbrowser.name", "Web Browser" )
+language.Add( "armenu_plugin_arbrowser.desc", "Enable a button on the main menu that opens a web browser" )
 
 local name = "arbrowser"
 AddPlugin( name, {
 	
-	Name = "#armenu_arbrowser.name",
-	Desc = "#armenu_arbrowser.desc",
 	OnEnabled = function()
 		
 		local x = CreateClientConVar( "arbrowser_x", 0.1, true, false, "X position (screen width * this)" )
@@ -465,7 +463,7 @@ AddPlugin( name, {
 		hook.Add( "PreCreateMenuButtons", name, function()
 			
 			local button = vgui.Create( "MainMenuButton" )
-			button:SetText( "#armenu_arbrowser.name" )
+			button:SetText( "#armenu_plugin_arbrowser.name" )
 			function button:DoClick()
 				
 				if #ARBrowser.Browsers > 0 then
