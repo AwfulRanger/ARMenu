@@ -8,7 +8,8 @@ function include( path, ... )
 	if file.Exists( "lua/" .. path, "GAME" ) == true then
 		
 		if file.Exists( path, "LuaMenu" ) == true then return includeunsafe( path, ... ) end
-		return CompileString( file.Read( "lua/" .. path, "GAME" ), "lua/" .. path )()
+		local func = CompileString( file.Read( "lua/" .. path, "GAME" ), "lua/" .. path )
+		if isfunction( func ) == true then return func() end
 		
 	else
 		
@@ -36,7 +37,8 @@ function include( path, ... )
 		if source != nil and source != "" and file.Exists( "lua/" .. source, "GAME" ) == true then
 			
 			if file.Exists( source, "LuaMenu" ) == true then return includeunsafe( source, ... ) end
-			return CompileString( file.Read( "lua/" .. source, "GAME" ), "lua/" .. source )()
+			local func = CompileString( file.Read( "lua/" .. source, "GAME" ), "lua/" .. source )
+			if isfunction( func ) == true then return func() end
 			
 		else
 			
