@@ -453,7 +453,7 @@ AddPlugin( name, {
 			for i = 1, #self.Browsers do
 				
 				local frame = self.Browsers[ i ].frame
-				if IsValid( frame ) == true then frame:SetVisible( true ) end
+				if IsValid( frame ) == true then frame:SetVisible( true ) frame:MakePopup() end
 				
 			end
 			
@@ -468,7 +468,15 @@ AddPlugin( name, {
 			button:SetText( "#armenu_arbrowser.name" )
 			function button:DoClick()
 				
-				RunConsoleCommand( "arbrowser_open" )
+				if #ARBrowser.Browsers > 0 then
+					
+					RunConsoleCommand( "arbrowser_unhide" )
+					
+				else
+					
+					RunConsoleCommand( "arbrowser_open" )
+					
+				end
 				
 			end
 			AddMenuButton( button, 190 )
