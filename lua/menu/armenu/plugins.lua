@@ -106,9 +106,7 @@ hook.Add( "PreCreateMenuBarButtons", "Plugins", function()
 			self.popup:SetPos( x, y )
 			function self.popup:Paint( w, h )
 				
-				--draw.RoundedBox( 4, 0, 0, w, h, MenuColor.bgdim )
-				surface.SetDrawColor( MenuColor.bgdim )
-				surface.DrawRect( 0, 0, w, h )
+				draw.RoundedBox( 4, 0, 0, w, h, MenuColor.bgdim )
 				
 			end
 			
