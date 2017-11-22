@@ -431,7 +431,7 @@ function PANEL:CreateInfo( ip, name, map, pass )
 	
 end
 
-function PANEL:Setup()
+function PANEL:MenuSetup()
 	
 	local pad = ScrH() * 0.01
 	self:DockPadding( pad, pad, pad, pad )

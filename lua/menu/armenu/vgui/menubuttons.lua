@@ -40,9 +40,10 @@ local function createbuttons( canvas )
 		
 	end
 	
+	local sep = ScrH() * 0.025
+	
 	hook.Run( "PreCreateMenuButtons", menubuttons )
 	
-	local sep = ScrH() * 0.025
 	
 	if IsInGame() == true then
 		
@@ -134,7 +135,7 @@ local function createbuttons( canvas )
 	local lastvalue
 	for _, v in SortedPairsByMemberValue( menubuttons, "pos", true ) do
 		
-		if lastvalue == pluginbutton and v.button != findmp and IsValid( pluginbutton ) == true then v.button:DockMargin( 0, 0, 0, sep ) end
+		if lastvalue == options and v.button != findmp then v.button:DockMargin( 0, 0, 0, sep ) end
 		lastvalue = v.button
 		
 	end
@@ -153,6 +154,7 @@ function PANEL:CreateChildren()
 		v.button:SetParent( self )
 		v.button:SetPos( 0, y )
 		v.button:InvalidateLayout( true )
+		if v.button.MenuSetup != nil then v.button:MenuSetup( self ) end
 		
 		local dl, dt, dr, db = v.button:GetDockMargin()
 		y = y + v.button:GetTall() + db

@@ -112,7 +112,7 @@ function PANEL:SetInnerPanel( panel )
 	self.innerpanel:SetParent( self.inside )
 	self.innerpanel:Dock( FILL )
 	
-	if self.innerpanel.Setup != nil then self.innerpanel:Setup() end
+	if self.innerpanel.MenuSetup != nil then self.innerpanel:MenuSetup() end
 	
 end
 

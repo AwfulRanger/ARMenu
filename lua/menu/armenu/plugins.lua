@@ -56,72 +56,154 @@ hook.Add( "MenuLoaded", "Plugins", function()
 	
 end )
 
+local checkmat = Material( "../../html/img/enabled.png" )
+local mat = Material( "icon16/wrench.png" )
 local menu
-hook.Add( "PreCreateMenuButtons", "Plugins", function()
+hook.Add( "PreCreateMenuBarButtons", "Plugins", function()
 	
-	pluginbutton = vgui.Create( "MainMenuButton" )
-	pluginbutton:SetText( "#armenu_plugins" )
-	function pluginbutton:DoClick()
+	local pad = math.Round( ScrH() * 0.005 )
+	
+	local button = vgui.Create( "MenuBarButton" )
+	button:SetWide( button:GetTall() )
+	button:DockMargin( pad, 0, 0, 0 )
+	button:SetText( "" )
+	function button:PerformLayout( w, h )
 		
-		if IsValid( menu ) == true then menu:Remove() end
-		menu = vgui.Create( "DFrame" )
-		menu:SetSize( ScrW() * 0.4, ScrH() * 0.8 )
-		menu:Center()
-		menu:SetTitle( "#armenu_plugins" )
-		menu:SetSizable( true )
-		menu:MakePopup()
+		self:SetWide( h )
 		
-		local scroll = vgui.Create( "DScrollPanel" )
-		scroll:SetParent( menu )
-		scroll:Dock( FILL )
+	end
+	local paint = button.Paint
+	function button:Paint( w, h, ... )
 		
-		local dock = ScrH() * 0.005
+		paint( self, w, h, ... )
 		
-		for _, v in pairs( plugins ) do
+		local s = math.min( 16, w * 0.4, h * 0.4 )
+		
+		surface.SetDrawColor( MenuColor.white )
+		surface.SetMaterial( mat )
+		surface.DrawTexturedRect( ( w * 0.5 ) - ( s * 0.5 ), ( h * 0.5 ) - ( s * 0.5 ), s, s )
+		
+	end
+	function button:DoClick()
+		
+		if IsValid( self.popup ) == true then
 			
-			local panel = vgui.Create( "DPanel" )
-			panel:SetParent( scroll )
-			panel:Dock( TOP )
-			panel:DockPadding( dock, dock, dock, dock )
-			panel:SetTall( ScrH() * 0.1 )
+			self.popup:Remove()
 			
-			local top = vgui.Create( "DPanel" )
-			top:SetParent( panel )
-			top:Dock( TOP )
-			top:DockMargin( 0, 0, 0, dock )
-			function top:Paint( w, h )
+		else
+			
+			local size = math.Round( ScrH() * 0.02 )
+			local sep = math.Round( size * 0.5 )
+			local pad = math.Round( size * 0.25 )
+			
+			self.popup = vgui.Create( "DPanel" )
+			self.popup:SetParent( GetMainMenu() )
+			self.popup:SetSize( ScrW() * 0.15, ScrH() * 0.3 )
+			local x, y = self:GetPos()
+			local bx, by = self:GetParent():GetPos()
+			x = bx + x + self:GetWide() - self.popup:GetWide() - ( size * 0.5 )
+			y = by - self.popup:GetTall() - ( size * 0.5 )
+			self.popup:SetPos( x, y )
+			function self.popup:Paint( w, h )
+				
+				--draw.RoundedBox( 4, 0, 0, w, h, MenuColor.bgdim )
+				surface.SetDrawColor( MenuColor.bgdim )
+				surface.DrawRect( 0, 0, w, h )
+				
 			end
 			
-			local title = vgui.Create( "DLabel" )
-			title:SetParent( top )
-			title:Dock( FILL )
-			title:SetTextColor( MenuColor.fg_alt )
-			title:SetText( v.Name or "" )
+			local scroll = vgui.Create( "DScrollPanel" )
+			scroll:SetParent( self.popup )
+			scroll:Dock( FILL )
 			
-			local check = vgui.Create( "DCheckBox" )
-			check:SetParent( top )
-			check:Dock( RIGHT )
-			check:SetValue( getenabled( _ ) )
-			function check:OnChange( bool )
+			local bgpanel = vgui.Create( "DPanel" )
+			bgpanel:SetParent( scroll )
+			bgpanel:Dock( FILL )
+			function bgpanel:Paint( w, h )
+			end
+			
+			local dock = ScrH() * 0.005
+			
+			for _, v in pairs( plugins ) do
 				
-				setenabled( _, bool )
+				local panel = vgui.Create( "DPanel" )
+				panel:SetParent( bgpanel )
+				panel:Dock( TOP )
+				panel:DockPadding( dock, dock, dock, dock )
+				panel:DockMargin( pad, pad, pad, 0 )
+				panel:SetTall( ScrH() * 0.1 )
+				function panel:Paint( w, h )
+					
+					draw.RoundedBox( 4, 0, 0, w, h, MenuColor.bg_alt )
+					
+				end
+				
+				local top = vgui.Create( "DPanel" )
+				top:SetParent( panel )
+				top:Dock( TOP )
+				top:DockMargin( 0, 0, 0, dock )
+				function top:Paint( w, h )
+				end
+				
+				local title = vgui.Create( "DLabel" )
+				title:SetParent( top )
+				title:Dock( FILL )
+				title:SetTextColor( MenuColor.fg_alt )
+				title:SetText( v.Name or "" )
+				
+				local check = vgui.Create( "DCheckBox" )
+				check:SetParent( top )
+				check:Dock( RIGHT )
+				check:SetValue( getenabled( _ ) )
+				function check:OnChange( bool )
+					
+					setenabled( _, bool )
+					
+				end
+				function check:Paint( w, h )
+					
+					surface.SetDrawColor( MenuColor.fg_alt )
+					surface.DrawRect( 0, 0, w, h )
+					
+					local w_ = math.ceil( w * 0.01 )
+					local h_ = math.ceil( h * 0.01 )
+					
+					surface.SetDrawColor( MenuColor.bg_alt )
+					surface.DrawRect( w_, h_, w - ( w_ * 2 ), h - ( h_ * 2 ) )
+					
+					if self:GetChecked() == true then
+						
+						local s = math.min( 16, w, h )
+						surface.SetDrawColor( MenuColor.white )
+						surface.SetMaterial( checkmat )
+						surface.DrawTexturedRect( ( w * 0.5 ) - ( s * 0.5 ), ( h * 0.5 ) - ( s * 0.5 ), s, s )
+						
+					end
+					
+				end
+				check:InvalidateParent( true )
+				check:SetWide( check:GetTall() )
+					
+				
+				local c = MenuColor.fg_alt
+				
+				local desc = vgui.Create( "RichText" )
+				desc:SetParent( panel )
+				desc:Dock( FILL )
+				desc:InsertColorChange( c.r, c.g, c.b, c.a )
+				desc:AppendText( v.Desc or "" )
 				
 			end
-			check:InvalidateParent( true )
-			check:SetWide( check:GetTall() )
-				
 			
-			local c = MenuColor.fg_alt
+			bgpanel:InvalidateLayout( true )
+			bgpanel:SizeToChildren( false, true )
+			bgpanel:SetTall( bgpanel:GetTall() + pad )
 			
-			local desc = vgui.Create( "RichText" )
-			desc:SetParent( panel )
-			desc:Dock( FILL )
-			desc:InsertColorChange( c.r, c.g, c.b, c.a )
-			desc:AppendText( v.Desc or "" )
+			GetMainMenu():SetPopup( self.popup )
 			
 		end
 		
 	end
-	AddMenuButton( pluginbutton, 700 )
+	AddMenuBarButton( button, 1000 )
 	
 end )

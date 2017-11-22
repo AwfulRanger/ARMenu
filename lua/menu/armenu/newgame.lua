@@ -572,7 +572,7 @@ function PANEL:CreateOptions()
 	
 end
 
-function PANEL:Setup()
+function PANEL:MenuSetup()
 	
 	currentmap = game.GetMap()
 	
