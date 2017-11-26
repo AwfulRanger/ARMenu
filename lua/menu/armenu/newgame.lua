@@ -179,12 +179,17 @@ function PANEL:CreateMapList( category )
 			end
 			
 			local isfav = false
-			for i_ = 1, #GetMapList().Favourites do
+			local favs = GetMapList().Favourites
+			if favs != nil then
 				
-				if GetMapList().Favourites[ i_ ] == maplist[ i ] then
+				for i_ = 1, #favs do
 					
-					isfav = true
-					break
+					if favs[ i_ ] == maplist[ i ] then
+						
+						isfav = true
+						break
+						
+					end
 					
 				end
 				
