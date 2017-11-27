@@ -100,6 +100,37 @@ local function createbuttons( canvas )
 	AddMenuButton( findmp, -800 )
 	
 	
+	local addons = vgui.Create( "MainMenuButton" )
+	addons:SetText( "#addons" )
+	function addons:DoClick()
+		
+		GetMainMenu():SetInnerPanel( vgui.Create( "MainMenu_Addons" ) )
+		
+	end
+	AddMenuButton( addons, -700 )
+	
+	
+	local demos = vgui.Create( "MainMenuButton" )
+	demos:SetText( "#demos" )
+	function demos:DoClick()
+		
+		GetMainMenu():SetInnerPanel( vgui.Create( "MainMenu_Demos" ) )
+		
+	end
+	AddMenuButton( demos, -600 )
+	
+	
+	local saves = vgui.Create( "MainMenuButton" )
+	saves:SetText( "#saves" )
+	saves:DockMargin( 0, 0, 0, sep )
+	function saves:DoClick()
+		
+		GetMainMenu():SetInnerPanel( vgui.Create( "MainMenu_Saves" ) )
+		
+	end
+	AddMenuButton( saves, -500 )
+	
+	
 	local options = vgui.Create( "MainMenuButton" )
 	options:SetText( "#options" )
 	options:DockMargin( 0, 0, 0, sep )
@@ -135,7 +166,7 @@ local function createbuttons( canvas )
 	local lastvalue
 	for _, v in SortedPairsByMemberValue( menubuttons, "pos", true ) do
 		
-		if lastvalue == options and v.button != findmp then v.button:DockMargin( 0, 0, 0, sep ) end
+		if lastvalue == options then v.button:DockMargin( 0, 0, 0, sep ) end
 		lastvalue = v.button
 		
 	end

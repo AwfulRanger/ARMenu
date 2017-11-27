@@ -16,7 +16,7 @@ local files = file.Find( "resource/localization/*.png", "MOD" )
 local languages = {}
 for i = 1, #files do languages[ string.lower( string.Left( files[ i ], #files[ i ] - 4 ) ) ] = Material( "resource/localization/" .. files[ i ] ) end
 
-local mountmat = Material( "../../html/img/games.png" )
+local mountmat = Material( "html/img/games.png" )
 
 file.CreateDir( "armenu/icon24" )
 local gamemodeicons = {}

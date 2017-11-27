@@ -7,6 +7,9 @@ language.Add( "armenu_promptno", "No" )
 
 function PANEL:Init()
 	
+	self:SetPos( 0, 0 )
+	self:SetSize( ScrW(), ScrH() )
+	
 	self.label = vgui.Create( "DLabel" )
 	self.label:SetParent( self )
 	self.label:SetFont( "DermaLarge" )

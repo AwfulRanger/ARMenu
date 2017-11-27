@@ -7,9 +7,9 @@ local PANEL = {}
 
 language.Add( "armenu_maxplayers", "Max players" )
 
-local favmat = Material( "../html/img/favourite.png" )
-local addfavmat = Material( "../html/img/favourite_add.png" )
-local remfavmat = Material( "../html/img/favourite_remove.png" )
+local favmat = Material( "html/img/favourite.png" )
+local addfavmat = Material( "html/img/favourite_add.png" )
+local remfavmat = Material( "html/img/favourite_remove.png" )
 
 local currentmap
 local currentcat = "Favourites"

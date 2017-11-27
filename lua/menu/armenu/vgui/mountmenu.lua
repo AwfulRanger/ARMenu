@@ -2,9 +2,9 @@ local PANEL = {}
 
 
 
-local notinstalled = Material( "../../html/img/notinstalled.png" )
-local notowned = Material( "../../html/img/notowned.png" )
-local checkmat = Material( "../../html/img/enabled.png" )
+local notinstalled = Material( "html/img/notinstalled.png" )
+local notowned = Material( "html/img/notowned.png" )
+local checkmat = Material( "html/img/enabled.png" )
 
 local gameicons = {}
 local games = engine.GetGames()

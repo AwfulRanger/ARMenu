@@ -18,7 +18,9 @@ MenuColor = {
 	bgdim = Color( 0, 0, 0, 200 ),
 	dullinactive = Color( 255, 255, 255, 10 ),
 	dullactive = Color( 255, 255, 255, 50 ),
-	bgdull = Color( 220, 220, 220, 255 )
+	bgdull = Color( 220, 220, 220, 255 ),
+	yes = Color( 0, 255, 0, 255 ),
+	no = Color( 255, 0, 0, 255 ),
 	
 }
 
@@ -29,6 +31,10 @@ include( "vgui/menubar.lua" )
 
 include( "newgame.lua" )
 include( "findmp.lua" )
+include( "workshop.lua" )
+include( "addons.lua" )
+include( "demos.lua" )
+include( "saves.lua" )
 
 
 
@@ -206,7 +212,7 @@ function PANEL:UpdateLogo()
 			
 			if from != to then file.Write( "armenu/logo/" .. gm .. ".png", from ) end
 			
-			logos[ gm ] = Material( "../data/armenu/logo/" .. gm .. ".png" )
+			logos[ gm ] = Material( "data/armenu/logo/" .. gm .. ".png" )
 			
 		end
 		

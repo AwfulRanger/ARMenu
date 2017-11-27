@@ -24,7 +24,7 @@ local dogamemodes = function()
 			
 			if from != to then file.Write( "armenu/icon24/" .. name .. ".png", from ) end
 			
-			gamemodeicons[ i ] = Material( "../data/armenu/icon24/" .. name .. ".png" )
+			gamemodeicons[ i ] = Material( "data/armenu/icon24/" .. name .. ".png" )
 			
 		end
 		

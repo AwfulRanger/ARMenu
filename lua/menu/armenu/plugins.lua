@@ -56,7 +56,7 @@ hook.Add( "MenuLoaded", "Plugins", function()
 	
 end )
 
-local checkmat = Material( "../../html/img/enabled.png" )
+local checkmat = Material( "html/img/enabled.png" )
 local mat = Material( "icon16/wrench.png" )
 local menu
 hook.Add( "PreCreateMenuBarButtons", "Plugins", function()
