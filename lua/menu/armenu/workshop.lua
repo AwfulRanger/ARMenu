@@ -607,6 +607,9 @@ function PANEL:CreateInfo( res )
 		title:SetCursor( "hand" )
 		title:SizeToContents()
 		
+		local createdby
+		local author
+		
 		if islocal != true then
 			
 			local authorbg = vgui.Create( "DPanel" )
@@ -615,15 +618,15 @@ function PANEL:CreateInfo( res )
 			function authorbg:Paint( w, h )
 			end
 			
-			local createdby = vgui.Create( "DLabel" )
+			createdby = vgui.Create( "DLabel" )
 			createdby:SetParent( authorbg )
 			createdby:Dock( LEFT )
 			createdby:SetFont( "DermaDefault" )
 			createdby:SetTextColor( MenuColor.fg_alt )
-			createdby:SetText( language.GetPhrase( "armenu_createdby" ) )
+			createdby:SetText( "" )
 			createdby:SizeToContents()
 			
-			local author = vgui.Create( "DLabel" )
+			author = vgui.Create( "DLabel" )
 			author:SetParent( authorbg )
 			author:Dock( LEFT )
 			author:SetFont( "DermaDefaultBold" )
@@ -657,17 +660,20 @@ function PANEL:CreateInfo( res )
 		createtime:SetTextColor( MenuColor.fg_alt )
 		createtime:SetText( "" )
 		
+		local updatedon
+		local updatetime
+		
 		if islocal != true then
 			
-			local updatedon = vgui.Create( "DLabel" )
+			updatedon = vgui.Create( "DLabel" )
 			updatedon:SetParent( timebg )
 			updatedon:Dock( LEFT )
 			updatedon:SetFont( "DermaDefault" )
 			updatedon:SetTextColor( MenuColor.fg_alt )
-			updatedon:SetText( "#armenu_updatedon" )
+			updatedon:SetText( "" )
 			updatedon:SizeToContents()
 			
-			local updatetime = vgui.Create( "DLabel" )
+			updatetime = vgui.Create( "DLabel" )
 			updatetime:SetParent( timebg )
 			updatetime:Dock( LEFT )
 			updatetime:SetFont( "DermaDefaultBold" )
@@ -696,23 +702,53 @@ function PANEL:CreateInfo( res )
 					if info.id != nil then function title:DoClick() gui.OpenURL( "http://steamcommunity.com/sharedfiles/filedetails/?id=" .. info.id ) end end
 					
 				end
-				if IsValid( author ) == true and info.ownername != nil then
+				if info.ownername != nil then
 					
-					author:SetText( info.ownername )
-					author:SizeToContents()
-					if info.owner != nil then function author:DoClick() gui.OpenURL( "http://steamcommunity.com/profiles/" .. info.owner ) end end
+					if IsValid( createdby ) == true then
+						
+						createdby:SetText( "#armenu_createdby" )
+						createdby:SizeToContents()
+						
+					end
+					if IsValid( author ) == true then
+						
+						author:SetText( info.ownername )
+						author:SizeToContents()
+						if info.owner != nil then function author:DoClick() gui.OpenURL( "http://steamcommunity.com/profiles/" .. info.owner ) end end
+						
+					end
 					
 				end
-				if IsValid( createtime ) == true and info.created != nil then
+				if info.created != nil then
 					
-					createtime:SetText( os.date( "%c", info.created ) )
-					createtime:SizeToContents()
+					if IsValid( createdon ) == true then
+						
+						createdon:SetText( "#armenu_createdon" )
+						createdon:SizeToContents()
+						
+					end
+					if IsValid( createtime ) == true then
+						
+						createtime:SetText( os.date( "%c", info.created ) )
+						createtime:SizeToContents()
+						
+					end
 					
 				end
-				if IsValid( updatetime ) == true and info.updated != nil then
+				if info.updated != nil then
 					
-					updatetime:SetText( os.date( "%c", info.updated ) )
-					updatetime:SizeToContents()
+					if IsValid( updatedon ) == true then
+						
+						updatedon:SetText( "#armenu_updatedon" )
+						updatedon:SizeToContents()
+						
+					end
+					if IsValid( updatetime ) == true then
+						
+						updatetime:SetText( os.date( "%c", info.updated ) )
+						updatetime:SizeToContents()
+						
+					end
 					
 				end
 				if IsValid( desc ) == true and info.description != nil then desc:AppendText( info.description ) end
