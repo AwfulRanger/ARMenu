@@ -44,6 +44,39 @@ PANEL.TagSelect = {
 	
 }
 
+function PANEL:Init()
+	
+	self.Tags = {}
+	self.ExtraTags = {}
+	self.TagSelect = {}
+	
+	self.CategoryPrefix = "addons"
+	self.Categories = {
+		
+		{
+			
+			{ "subscribed" },
+			
+		},
+		{
+			
+			{ "trending" },
+			{ "popular" },
+			{ "latest" },
+			
+		},
+		{
+			
+			{ "friends" },
+			{ "mine" },
+			
+		},
+		
+	}
+	self.DefaultCategory = "subscribed"
+	
+end
+
 function PANEL:GetTags( tags )
 	
 	if tags != nil then return tags end

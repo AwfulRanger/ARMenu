@@ -14,6 +14,7 @@ local items = 25
 function PANEL:Init()
 	
 	self.Tags = { "save" }
+	self.ExtraTags = {}
 	self.TagSelect = {
 		
 		"scenes",

@@ -16,6 +16,7 @@ local items = 25
 function PANEL:Init()
 	
 	self.Tags = { "demo" }
+	self.ExtraTags = {}
 	self.TagSelect = {}
 
 	self.CategoryPrefix = "demos"

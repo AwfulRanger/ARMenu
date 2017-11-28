@@ -10,6 +10,7 @@ language.Add( "armenu_addonunmount", "Unmount" )
 function PANEL:Init()
 	
 	self.Tags = { "addon" }
+	self.ExtraTags = {}
 	self.TagSelect = {
 		
 		"gamemode",
