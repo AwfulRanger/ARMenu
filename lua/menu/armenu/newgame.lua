@@ -46,7 +46,7 @@ local function newcategory( name, tbl, parent )
 	local num = 0
 	if tbl != nil then num = #tbl end
 	
-	local button = vgui.Create( "DButton" )
+	local button = vgui.Create( "SoundButton" )
 	button:SetParent( parent )
 	button:Dock( TOP )
 	button:DockMargin( 0, 0, 0, ScrH() * 0.005 )
@@ -75,6 +75,8 @@ local function newcategory( name, tbl, parent )
 		
 	end
 	function button:DoClick()
+		
+		self:DoClickSound()
 		
 		parent:GetParent():CreateMapList( name )
 		currentcat = name
@@ -149,7 +151,7 @@ function PANEL:CreateMapList( category )
 			
 			local mat = MapIcons[ maplist[ i ] ]
 			
-			local button = vgui.Create( "DButton" )
+			local button = vgui.Create( "SoundButton" )
 			button:SetParent( self.maps )
 			button:SetText( "" )
 			button:SetPos( x, y )
@@ -174,6 +176,8 @@ function PANEL:CreateMapList( category )
 			end
 			function button:DoClick()
 				
+				self:DoClickSound()
+				
 				currentmap = maplist[ i ]
 				
 			end
@@ -195,7 +199,7 @@ function PANEL:CreateMapList( category )
 				
 			end
 			
-			local favbutton = vgui.Create( "DButton" )
+			local favbutton = vgui.Create( "SoundButton" )
 			favbutton:SetParent( button )
 			favbutton:SetPos( size - 16, 0 )
 			favbutton:SetSize( 16, 16 )
@@ -223,6 +227,8 @@ function PANEL:CreateMapList( category )
 				
 			end
 			function favbutton:DoClick()
+				
+				self:DoClickSound()
 				
 				isfav = !isfav
 				ToggleFavourite( maplist[ i ] )
@@ -269,7 +275,7 @@ function PANEL:CreateOptions()
 	
 	local parent = self
 	
-	local startgame = vgui.Create( "DButton" )
+	local startgame = vgui.Create( "SoundButton" )
 	startgame:SetParent( bgpanel )
 	startgame:Dock( BOTTOM )
 	startgame:DockMargin( pad, pad, pad, pad )
@@ -290,6 +296,8 @@ function PANEL:CreateOptions()
 		
 	end
 	function startgame:DoClick()
+		
+		self:DoClickSound()
 		
 		GetMainMenu():OpenMainMenu()
 		

@@ -54,7 +54,7 @@ function PANEL:Init()
 		
 		if gamemodes[ i ].menusystem == true then
 			
-			local button = vgui.Create( "DButton" )
+			local button = vgui.Create( "SoundButton" )
 			button:SetParent( bgpanel )
 			button:Dock( TOP )
 			button:DockMargin( pad, pad, pad, 0 )
@@ -91,6 +91,8 @@ function PANEL:Init()
 				
 			end
 			function button:DoClick()
+				
+				self:DoClickSound()
 				
 				RunConsoleCommand( "gamemode", gamemodes[ i ].name )
 				GetMainMenu():SetPopup( nil )

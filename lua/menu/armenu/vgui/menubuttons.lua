@@ -52,6 +52,8 @@ local function createbuttons( canvas )
 		resume:SetText( "#resume_game" )
 		function resume:DoClick()
 			
+			self:DoClickSound()
+			
 			gui.HideGameUI()
 			
 		end
@@ -61,6 +63,8 @@ local function createbuttons( canvas )
 		local disconnect = vgui.Create( "MainMenuButton" )
 		disconnect:SetText( "#disconnect" )
 		function disconnect:DoClick()
+			
+			self:DoClickSound()
 			
 			local prompt = vgui.Create( "YesNoPrompt" )
 			prompt:SetPos( 0, 0 )
@@ -83,6 +87,8 @@ local function createbuttons( canvas )
 	newgame:SetText( "#new_game" )
 	function newgame:DoClick()
 		
+		self:DoClickSound()
+		
 		GetMainMenu():SetInnerPanel( vgui.Create( "MainMenu_NewGame" ) )
 		
 	end
@@ -94,6 +100,8 @@ local function createbuttons( canvas )
 	findmp:DockMargin( 0, 0, 0, sep )
 	function findmp:DoClick()
 		
+		self:DoClickSound()
+		
 		GetMainMenu():SetInnerPanel( vgui.Create( "MainMenu_FindMP" ) )
 		
 	end
@@ -104,6 +112,8 @@ local function createbuttons( canvas )
 	addons:SetText( "#addons" )
 	function addons:DoClick()
 		
+		self:DoClickSound()
+		
 		GetMainMenu():SetInnerPanel( vgui.Create( "MainMenu_Addons" ) )
 		
 	end
@@ -113,6 +123,8 @@ local function createbuttons( canvas )
 	local demos = vgui.Create( "MainMenuButton" )
 	demos:SetText( "#demos" )
 	function demos:DoClick()
+		
+		self:DoClickSound()
 		
 		GetMainMenu():SetInnerPanel( vgui.Create( "MainMenu_Demos" ) )
 		
@@ -125,6 +137,8 @@ local function createbuttons( canvas )
 	saves:DockMargin( 0, 0, 0, sep )
 	function saves:DoClick()
 		
+		self:DoClickSound()
+		
 		GetMainMenu():SetInnerPanel( vgui.Create( "MainMenu_Saves" ) )
 		
 	end
@@ -136,6 +150,8 @@ local function createbuttons( canvas )
 	options:DockMargin( 0, 0, 0, sep )
 	function options:DoClick()
 		
+		self:DoClickSound()
+		
 		RunGameUICommand( "openoptionsdialog" )
 		
 	end
@@ -145,6 +161,8 @@ local function createbuttons( canvas )
 	local quit = vgui.Create( "MainMenuButton" )
 	quit:SetText( "#quit" )
 	function quit:DoClick()
+		
+		self:DoClickSound()
 		
 		local prompt = vgui.Create( "YesNoPrompt" )
 		prompt:SetPos( 0, 0 )

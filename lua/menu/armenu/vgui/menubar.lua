@@ -100,9 +100,12 @@ local function createbuttons( canvas )
 		resume:SetImage( "../../html/img/back_to_game.png" )
 		function resume:DoClick()
 			
+			self:DoClickSound()
+			
 			gui.HideGameUI()
 			
 		end
+		resume.ClickSound = resume.ReturnSound
 		AddMenuBarButton( resume, -1000 )
 		
 	end
@@ -116,9 +119,12 @@ local function createbuttons( canvas )
 		back:SetImage( "../../html/img/back_to_main_menu.png" )
 		function back:DoClick()
 			
+			self:DoClickSound()
+			
 			GetMainMenu():OpenMainMenu()
 			
 		end
+		back.ClickSound = back.ReturnSound
 		AddMenuBarButton( back, -900 )
 		
 	end
@@ -155,9 +161,13 @@ local function createbuttons( canvas )
 		
 		if IsValid( self.popup ) == true then
 			
+			self:DoClickSound( self.ReturnSound )
+			
 			self.popup:Remove()
 			
 		else
+			
+			self:DoClickSound()
 			
 			self.popup = vgui.Create( "LanguageMenu" )
 			self.popup:SetParent( GetMainMenu() )
@@ -201,9 +211,13 @@ local function createbuttons( canvas )
 		
 		if IsValid( self.popup ) == true then
 			
+			self:DoClickSound( self.ReturnSound )
+			
 			self.popup:Remove()
 			
 		else
+			
+			self:DoClickSound()
 			
 			self.popup = vgui.Create( "MountMenu" )
 			self.popup:SetParent( GetMainMenu() )
@@ -269,9 +283,13 @@ local function createbuttons( canvas )
 		
 		if IsValid( self.popup ) == true then
 			
+			self:DoClickSound( self.ReturnSound )
+			
 			self.popup:Remove()
 			
 		else
+			
+			self:DoClickSound()
 			
 			local size = math.Round( ScrH() * 0.02 )
 			local sep = math.Round( size * 0.5 )

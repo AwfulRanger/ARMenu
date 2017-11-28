@@ -332,7 +332,7 @@ function PANEL:CreateInfo( ip, name, map, pass )
 	if ip != nil then
 		
 		local joinpad = ScrH() * 0.01
-		local join = vgui.Create( "DButton" )
+		local join = vgui.Create( "SoundButton" )
 		join:SetParent( self.info )
 		join:Dock( BOTTOM )
 		join:DockMargin( joinpad, joinpad, joinpad, joinpad )
@@ -353,6 +353,8 @@ function PANEL:CreateInfo( ip, name, map, pass )
 			
 		end
 		function join:DoClick()
+			
+			self:DoClickSound()
 			
 			if IsValid( passentry ) == true then RunConsoleCommand( "password", passentry:GetValue() ) end
 			JoinServer( ip )
@@ -446,14 +448,16 @@ function PANEL:MenuSetup()
 	
 	self:CreateList()
 	
-	local internetbutton = vgui.Create( "DButton" )
+	local internetbutton = vgui.Create( "SoundButton" )
 	internetbutton:SetParent( self.catbg )
 	internetbutton:Dock( TOP )
 	internetbutton:SetText( "#servers_internet" )
 	internetbutton:SetFont( "DermaDefaultBold" )
 	function internetbutton:Paint( w, h )
 	end
-	function internetbutton.DoClick()
+	function internetbutton.DoClick( panel )
+		
+		panel:DoClickSound()
 		
 		self:CreateInfo()
 		self:CreateServers()
@@ -461,14 +465,16 @@ function PANEL:MenuSetup()
 		
 	end
 	
-	local favoritebutton = vgui.Create( "DButton" )
+	local favoritebutton = vgui.Create( "SoundButton" )
 	favoritebutton:SetParent( self.catbg )
 	favoritebutton:Dock( TOP )
 	favoritebutton:SetText( "#servers_favorites" )
 	favoritebutton:SetFont( "DermaDefaultBold" )
 	function favoritebutton:Paint( w, h )
 	end
-	function favoritebutton.DoClick()
+	function favoritebutton.DoClick( panel )
+		
+		panel:DoClickSound()
 		
 		self:CreateInfo()
 		self:CreateServers()
@@ -476,14 +482,16 @@ function PANEL:MenuSetup()
 		
 	end
 	
-	local historybutton = vgui.Create( "DButton" )
+	local historybutton = vgui.Create( "SoundButton" )
 	historybutton:SetParent( self.catbg )
 	historybutton:Dock( TOP )
 	historybutton:SetText( "#servers_history" )
 	historybutton:SetFont( "DermaDefaultBold" )
 	function historybutton:Paint( w, h )
 	end
-	function historybutton.DoClick()
+	function historybutton.DoClick( panel )
+		
+		panel:DoClickSound()
 		
 		self:CreateInfo()
 		self:CreateServers()
@@ -491,14 +499,16 @@ function PANEL:MenuSetup()
 		
 	end
 	
-	local lanbutton = vgui.Create( "DButton" )
+	local lanbutton = vgui.Create( "SoundButton" )
 	lanbutton:SetParent( self.catbg )
 	lanbutton:Dock( TOP )
 	lanbutton:SetText( "#servers_local" )
 	lanbutton:SetFont( "DermaDefaultBold" )
 	function lanbutton:Paint( w, h )
 	end
-	function lanbutton.DoClick()
+	function lanbutton.DoClick( panel )
+		
+		panel:DoClickSound()
 		
 		self:CreateInfo()
 		self:CreateServers()
@@ -506,7 +516,7 @@ function PANEL:MenuSetup()
 		
 	end
 	
-	local refresh = vgui.Create( "DButton" )
+	local refresh = vgui.Create( "SoundButton" )
 	refresh:SetParent( self.catbg )
 	refresh:Dock( TOP )
 	refresh:DockMargin( 0, ScrH() * 0.01, 0, 0 )
@@ -531,7 +541,9 @@ function PANEL:MenuSetup()
 		end
 		
 	end
-	function refresh.DoClick()
+	function refresh.DoClick( panel )
+		
+		panel:DoClickSound()
 		
 		if active == true then
 			
@@ -548,14 +560,16 @@ function PANEL:MenuSetup()
 		
 	end
 	
-	local legacy = vgui.Create( "DButton" )
+	local legacy = vgui.Create( "SoundButton" )
 	legacy:SetParent( self.catbg )
 	legacy:Dock( TOP )
 	legacy:SetText( "#legacy_browser" )
 	legacy:SetFont( "DermaDefaultBold" )
 	function legacy:Paint( w, h )
 	end
-	function legacy:DoClick()
+	function legacy:DoClick( panel )
+		
+		panel:DoClickSound()
 		
 		RunConsoleCommand( "gamemenucommand", "openserverbrowser" )
 		

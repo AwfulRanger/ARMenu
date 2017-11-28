@@ -24,6 +24,8 @@ MenuColor = {
 	
 }
 
+include( "vgui/soundbutton.lua" )
+
 include( "vgui/yesnoprompt.lua" )
 include( "vgui/changebutton.lua" )
 include( "vgui/menubuttons.lua" )

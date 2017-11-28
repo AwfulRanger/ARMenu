@@ -19,7 +19,7 @@ function PANEL:Init()
 		local line = math.ceil( i / ( #files * 0.25 ) ) - 1
 		local col = i - ( ( #files * 0.25 ) * line ) - 1
 		
-		local button = vgui.Create( "DButton" )
+		local button = vgui.Create( "SoundButton" )
 		button:SetParent( self )
 		button:SetText( "" )
 		button:SetPos( ( size * col ) + ( sep * ( col + 1 ) ), ( size * ( line ) ) + ( sep * ( line + 1 ) ) )
@@ -45,6 +45,8 @@ function PANEL:Init()
 			
 		end
 		function button:DoClick()
+			
+			self:DoClickSound()
 			
 			RunConsoleCommand( "gmod_language", _ )
 			GetMainMenu():SetPopup( nil )

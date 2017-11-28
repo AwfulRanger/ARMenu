@@ -142,7 +142,7 @@ function PANEL:CreateInfo( res, ... )
 		function actionbg:Paint( w, h )
 		end
 		
-		local play = vgui.Create( "DButton" )
+		local play = vgui.Create( "SoundButton" )
 		play:SetParent( actionbg )
 		play:Dock( BOTTOM )
 		play:SetTall( tall )
@@ -158,7 +158,7 @@ function PANEL:CreateInfo( res, ... )
 			
 		end
 		
-		local tovideo = vgui.Create( "DButton" )
+		local tovideo = vgui.Create( "SoundButton" )
 		tovideo:SetParent( actionbg )
 		tovideo:Dock( BOTTOM )
 		tovideo:DockMargin( 0, 0, 0, pad )
@@ -177,18 +177,22 @@ function PANEL:CreateInfo( res, ... )
 		
 		if istable( res ) == true then
 			
-			function play.DoClick()
+			function play.DoClick( panel )
+				
+				panel:DoClickSound()
 				
 				self:PlayDemo( res.fullpath )
 				
 			end
-			function tovideo.DoClick()
+			function tovideo.DoClick( panel )
+				
+				panel:DoClickSound()
 				
 				self:DemoToVideo( res.fullpath )
 				
 			end
 			
-			local delete = vgui.Create( "DButton" )
+			local delete = vgui.Create( "SoundButton" )
 			delete:SetParent( actionbg )
 			delete:Dock( BOTTOM )
 			delete:DockMargin( 0, pad, 0, pad )
@@ -204,13 +208,15 @@ function PANEL:CreateInfo( res, ... )
 				draw.RoundedBox( 4, 0, 0, w, h, color )
 				
 			end
-			function delete.DoClick()
+			function delete.DoClick( panel )
+				
+				panel:DoClickSound()
 				
 				self:DeleteDemo( res.fullpath )
 				
 			end
 			
-			local publish = vgui.Create( "DButton" )
+			local publish = vgui.Create( "SoundButton" )
 			publish:SetParent( actionbg )
 			publish:Dock( BOTTOM )
 			publish:SetTall( tall )
@@ -225,7 +231,9 @@ function PANEL:CreateInfo( res, ... )
 				draw.RoundedBox( 4, 0, 0, w, h, color )
 				
 			end
-			function publish.DoClick()
+			function publish.DoClick( panel )
+				
+				panel:DoClickSound()
 				
 				self:Publish( res.fullpath, res.preview )
 				
@@ -235,7 +243,9 @@ function PANEL:CreateInfo( res, ... )
 			
 		else
 			
-			function play.DoClick()
+			function play.DoClick( panel )
+				
+				panel:DoClickSound()
 				
 				steamworks.FileInfo( res, function( info )
 					
@@ -252,7 +262,9 @@ function PANEL:CreateInfo( res, ... )
 				end )
 				
 			end
-			function tovideo.DoClick()
+			function tovideo.DoClick( panel )
+				
+				panel:DoClickSound()
 				
 				steamworks.FileInfo( res, function( info )
 					

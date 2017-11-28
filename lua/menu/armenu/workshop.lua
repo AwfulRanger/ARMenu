@@ -294,7 +294,7 @@ function PANEL:CreateButton( parent, x, y, w, h, res )
 	
 	local mat
 	
-	local button = vgui.Create( "DButton" )
+	local button = vgui.Create( "SoundButton" )
 	button:SetParent( parent )
 	button:SetText( "" )
 	button:SetPos( x, y )
@@ -332,7 +332,9 @@ function PANEL:CreateButton( parent, x, y, w, h, res )
 		return true
 		
 	end
-	function button.DoClick()
+	function button.DoClick( panel )
+		
+		panel:DoClickSound()
 		
 		self.CurrentAddon = res
 		self:CreateInfo( res )
@@ -442,7 +444,7 @@ function PANEL:CreateList( itemtype, tags, days, page )
 	pagenum:SetTextColor( MenuColor.fg_alt )
 	pagenum:SetText( " / " )
 	
-	local prev = vgui.Create( "DButton" )
+	local prev = vgui.Create( "SoundButton" )
 	prev:SetParent( pagebg )
 	prev:SetPos( h * 0.325, 0 )
 	prev:SetSize( h * 0.075, ph )
@@ -458,11 +460,13 @@ function PANEL:CreateList( itemtype, tags, days, page )
 	end
 	function prev:DoClick()
 		
+		self:DoClickSound()
+		
 		if wang:GetValue() - 1 >= wang:GetMin() then wang:SetValue( wang:GetValue() - 1 ) end
 		
 	end
 	
-	local next_ = vgui.Create( "DButton" )
+	local next_ = vgui.Create( "SoundButton" )
 	next_:SetParent( pagebg )
 	next_:SetPos( h * 0.6, 0 )
 	next_:SetSize( h * 0.075, ph )
@@ -477,6 +481,8 @@ function PANEL:CreateList( itemtype, tags, days, page )
 		
 	end
 	function next_:DoClick()
+		
+		self:DoClickSound()
 		
 		if wang:GetValue() + 1 <= wang:GetMax() then wang:SetValue( wang:GetValue() + 1 ) end
 		
@@ -720,7 +726,7 @@ function PANEL:CreateInfo( res )
 			function votebg:Paint( w, h )
 			end
 			
-			local upvote = vgui.Create( "DButton" )
+			local upvote = vgui.Create( "SoundButton" )
 			upvote:SetParent( votebg )
 			upvote:Dock( LEFT )
 			upvote:SetFont( "DermaDefaultBold" )
@@ -740,11 +746,13 @@ function PANEL:CreateInfo( res )
 			end
 			function upvote:DoClick()
 				
+				self:DoClickSound()
+				
 				steamworks.Vote( res, true )
 				
 			end
 			
-			local downvote = vgui.Create( "DButton" )
+			local downvote = vgui.Create( "SoundButton" )
 			downvote:SetParent( votebg )
 			downvote:Dock( RIGHT )
 			downvote:SetFont( "DermaDefaultBold" )
@@ -763,6 +771,8 @@ function PANEL:CreateInfo( res )
 				
 			end
 			function downvote:DoClick()
+				
+				self:DoClickSound()
 				
 				steamworks.Vote( res, false )
 				
@@ -897,7 +907,7 @@ function PANEL:CreateCategories()
 			
 			local cat = self.Categories[ i ][ i_ ]
 			
-			local button = vgui.Create( "DButton" )
+			local button = vgui.Create( "SoundButton" )
 			button:SetParent( self.catbg )
 			button:Dock( TOP )
 			button:SetFont( "DermaDefaultBold" )
@@ -905,7 +915,9 @@ function PANEL:CreateCategories()
 			button:SizeToContents()
 			function button:Paint( w, h )
 			end
-			function button.DoClick()
+			function button.DoClick( panel )
+				
+				panel:DoClickSound()
 				
 				self:CreateInfo()
 				self:CreateList( cat[ 1 ] )
@@ -950,7 +962,7 @@ function PANEL:CreateCategories()
 		
 	end
 	
-	local openpage = vgui.Create( "DButton" )
+	local openpage = vgui.Create( "SoundButton" )
 	openpage:SetParent( self.catbg )
 	openpage:Dock( BOTTOM )
 	openpage:SetTall( ScrH() * 0.05 )
@@ -965,6 +977,8 @@ function PANEL:CreateCategories()
 		
 	end
 	function openpage:DoClick()
+		
+		self:DoClickSound()
 		
 		steamworks.OpenWorkshop()
 		

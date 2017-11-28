@@ -139,7 +139,7 @@ function PANEL:CreateInfo( res, ... )
 		function actionbg:Paint( w, h )
 		end
 		
-		local load = vgui.Create( "DButton" )
+		local load = vgui.Create( "SoundButton" )
 		load:SetParent( actionbg )
 		load:Dock( BOTTOM )
 		load:SetTall( tall )
@@ -157,13 +157,15 @@ function PANEL:CreateInfo( res, ... )
 		
 		if istable( res ) == true then
 			
-			function load.DoClick()
+			function load.DoClick( panel )
+				
+				panel:DoClickSound()
 				
 				self:LoadSave( res.fullpath )
 				
 			end
 			
-			local delete = vgui.Create( "DButton" )
+			local delete = vgui.Create( "SoundButton" )
 			delete:SetParent( actionbg )
 			delete:Dock( BOTTOM )
 			delete:DockMargin( 0, pad, 0, pad )
@@ -179,13 +181,15 @@ function PANEL:CreateInfo( res, ... )
 				draw.RoundedBox( 4, 0, 0, w, h, color )
 				
 			end
-			function delete.DoClick()
+			function delete.DoClick( panel )
+				
+				panel:DoClickSound()
 				
 				self:DeleteSave( res.fullpath )
 				
 			end
 			
-			local publish = vgui.Create( "DButton" )
+			local publish = vgui.Create( "SoundButton" )
 			publish:SetParent( actionbg )
 			publish:Dock( BOTTOM )
 			publish:SetTall( tall )
@@ -200,7 +204,9 @@ function PANEL:CreateInfo( res, ... )
 				draw.RoundedBox( 4, 0, 0, w, h, color )
 				
 			end
-			function publish.DoClick()
+			function publish.DoClick( panel )
+				
+				panel:DoClickSound()
 				
 				self:Publish( res.fullpath, res.preview )
 				
@@ -210,7 +216,9 @@ function PANEL:CreateInfo( res, ... )
 			
 		else
 			
-			function load.DoClick()
+			function load.DoClick( panel )
+				
+				panel:DoClickSound()
 				
 				steamworks.FileInfo( res, function( info )
 					

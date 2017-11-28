@@ -88,9 +88,13 @@ hook.Add( "PreCreateMenuBarButtons", "Plugins", function()
 		
 		if IsValid( self.popup ) == true then
 			
+			self:DoClickSound( self.ReturnSound )
+			
 			self.popup:Remove()
 			
 		else
+			
+			self:DoClickSound()
 			
 			local size = math.Round( ScrH() * 0.02 )
 			local sep = math.Round( size * 0.5 )

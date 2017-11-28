@@ -85,6 +85,8 @@ AddPlugin( name, {
 			button:SetText( "#armenu_plugin_achievements.name" )
 			function button:DoClick()
 				
+				self:DoClickSound()
+				
 				RunConsoleCommand( "armenu_achievements" )
 				
 			end

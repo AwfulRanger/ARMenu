@@ -13,4 +13,4 @@ end
 
 
 
-vgui.Register( "MenuBarButton", PANEL, "DButton" )
+vgui.Register( "MenuBarButton", PANEL, "SoundButton" )

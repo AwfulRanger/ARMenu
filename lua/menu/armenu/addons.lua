@@ -67,7 +67,7 @@ function PANEL:CreateInfo( res, ... )
 		function actionbg:Paint( w, h )
 		end
 		
-		local subscribe = vgui.Create( "DButton" )
+		local subscribe = vgui.Create( "SoundButton" )
 		subscribe:SetParent( actionbg )
 		subscribe:Dock( BOTTOM )
 		subscribe:DockMargin( 0, pad, 0, 0 )
@@ -86,6 +86,8 @@ function PANEL:CreateInfo( res, ... )
 		end
 		function subscribe:DoClick()
 			
+			self:DoClickSound()
+			
 			if steamworks.IsSubscribed( res ) == true then
 				
 				steamworks.Unsubscribe( res )
@@ -101,7 +103,7 @@ function PANEL:CreateInfo( res, ... )
 		
 		if steamworks.IsSubscribed( res ) == true then
 			
-			local mount = vgui.Create( "DButton" )
+			local mount = vgui.Create( "SoundButton" )
 			mount:SetParent( actionbg )
 			mount:Dock( BOTTOM )
 			mount:SetTall( tall )
@@ -119,7 +121,9 @@ function PANEL:CreateInfo( res, ... )
 			end
 			function mount:DoClick()
 				
-				steamworks.SetShouldMountAddon( res, !steamworks.ShouldMountAddon( id ) )
+				self:DoClickSound()
+				
+				steamworks.SetShouldMountAddon( res, !steamworks.ShouldMountAddon( res ) )
 				steamworks.ApplyAddons()
 				
 			end

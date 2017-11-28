@@ -38,7 +38,7 @@ function PANEL:Init()
 		
 	end
 	
-	self.yes = vgui.Create( "DButton" )
+	self.yes = vgui.Create( "SoundButton" )
 	self.yes:SetParent( self )
 	self.yes:SetFont( "DermaLarge" )
 	self.yes:SetText( "#armenu_promptyes" )
@@ -72,12 +72,14 @@ function PANEL:Init()
 	end
 	self.yes.DoClick = function( panel )
 		
+		panel:DoClickSound()
+		
 		self:Remove()
 		self:OnYes()
 		
 	end
 	
-	self.no = vgui.Create( "DButton" )
+	self.no = vgui.Create( "SoundButton" )
 	self.no:SetParent( self )
 	self.no:SetFont( "DermaLarge" )
 	self.no:SetText( "#armenu_promptno" )
@@ -109,7 +111,10 @@ function PANEL:Init()
 		return true
 		
 	end
+	self.no.ClickSound = self.no.ReturnSound
 	self.no.DoClick = function( panel )
+		
+		panel:DoClickSound()
 		
 		self:Remove()
 		self:OnNo()

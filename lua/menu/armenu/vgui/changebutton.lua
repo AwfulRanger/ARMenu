@@ -43,6 +43,8 @@ end
 
 function PANEL:DoClick()
 	
+	self:DoClickSound()
+	
 	if BRANCH == "dev" then gui.OpenURL( "http://wiki.garrysmod.com/changelist/" ) return end
 	if BRANCH == "prerelease" then gui.OpenURL( "http://wiki.garrysmod.com/changelist/prerelease/" ) return end
 	
@@ -52,4 +54,4 @@ end
 
 
 
-vgui.Register( "ChangeButton", PANEL, "DButton" )
+vgui.Register( "ChangeButton", PANEL, "SoundButton" )

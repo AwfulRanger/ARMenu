@@ -466,6 +466,8 @@ AddPlugin( name, {
 			button:SetText( "#armenu_plugin_arbrowser.name" )
 			function button:DoClick()
 				
+				self:DoClickSound()
+				
 				if #ARBrowser.Browsers > 0 then
 					
 					RunConsoleCommand( "arbrowser_unhide" )
