@@ -567,9 +567,9 @@ function PANEL:MenuSetup()
 	legacy:SetFont( "DermaDefaultBold" )
 	function legacy:Paint( w, h )
 	end
-	function legacy:DoClick( panel )
+	function legacy:DoClick()
 		
-		panel:DoClickSound()
+		self:DoClickSound()
 		
 		RunConsoleCommand( "gamemenucommand", "openserverbrowser" )
 		
