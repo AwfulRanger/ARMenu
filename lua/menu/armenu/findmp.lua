@@ -211,7 +211,7 @@ function PANEL:CreateList( query )
 		Type = query,
 		Callback = function( ping, name, desc, map, players, maxplayers, botplayers, pass, lastplayed, address, gm, workshopid )
 			
-			if stop == true or curquery != query then
+			if stop == true or curquery != query or IsValid( self ) != true then
 				
 				stop = false
 				return false
@@ -242,7 +242,16 @@ function PANEL:CreateList( query )
 				workshopid = workshopid,
 				
 			} )
-			if desc == curgamemode then self.server:AddLine( name, map, players .. "/" .. maxplayers, ping, ( pass == true and "✓" ) or "✘" ) end
+			if desc == curgamemode then
+				
+				local button = self.server:AddLine( name, map, players .. "/" .. maxplayers, ping, ( pass == true and "✓" ) or "✘" )
+				function button.OnSelect()
+					
+					self:CreateInfo( address, name, map, pass )
+					
+				end
+				
+			end
 			
 		end,
 		Finished = function()
