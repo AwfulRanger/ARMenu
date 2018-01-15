@@ -8,13 +8,14 @@ language.Add( "armenu_nextpage", "Next" )
 language.Add( "armenu_createdby", "Created by " )
 language.Add( "armenu_createdon", "Created on " )
 language.Add( "armenu_updatedon", ", last updated on " )
-language.Add( "armenu_docache", "Cache results" )
+language.Add( "armenu_docache", "Cache pages" )
+language.Add( "armenu_clearcache", "Clear cache" )
 
 local upmat = Material( "html/img/thumb-up.png" )
 local downmat = Material( "html/img/thumb-down.png" )
 
-local cacheworkshop = CreateClientConVar( "armenu_cacheworkshop", 1, true, false, "Cache workshop results" )
-local cachevalue = cacheworkshop:GetBool()
+local cacheworkshop = CreateClientConVar( "armenu_cacheworkshop", 0, true, false, "Cache workshop pages" )
+PANEL.CacheEnabled = cacheworkshop:GetBool()
 
 PANEL.Tags = {}
 PANEL.ExtraTags = {}
@@ -45,6 +46,8 @@ PANEL.TagSelect = {
 }
 
 function PANEL:Init()
+	
+	self.CacheEnabled = cacheworkshop:GetBool()
 	
 	self.Tags = {}
 	self.ExtraTags = {}
@@ -96,6 +99,26 @@ local items = 25
 
 local pagescache = {}
 local listcache = {}
+local matcache = {}
+local matpathcache = {}
+local infocache = {}
+local votecache = {}
+
+local function clearcache( extra )
+	
+	pagescache = {}
+	listcache = {}
+	
+	if extra == true then
+		
+		matcache = {}
+		matpathcache = {}
+		infocache = {}
+		votecache = {}
+		
+	end
+	
+end
 
 function PANEL:GetCachedList( itemtype, tags, page )
 	
@@ -144,7 +167,7 @@ function PANEL:CacheList( itemtype, tags, page, data )
 	local pages = math.ceil( data.totalresults / items )
 	if pagescache[ itemtype ] == nil then pagescache[ itemtype ] = {} end
 	if pagescache[ itemtype ][ tags ] == nil then pagescache[ itemtype ][ tags ] = pages end
-	if cachevalue == true then pages = pagescache[ itemtype ][ tags ] end
+	if self.CacheEnabled == true then pages = pagescache[ itemtype ][ tags ] end
 	
 	if listcache[ itemtype ] == nil then listcache[ itemtype ] = {} end
 	if listcache[ itemtype ][ tags ] == nil then listcache[ itemtype ][ tags ] = {} end
@@ -167,7 +190,7 @@ function PANEL:GetList( callback, itemtype, tags, days, page )
 		
 	end
 	
-	if cachevalue == true then
+	if self.CacheEnabled == true then
 		
 		local cacheddata, cachedpages = self:GetCachedList( itemtype, tagstr, page )
 		if cacheddata != nil and cachedpages != nil then callback( cacheddata, cachedpages ) return end
@@ -183,7 +206,7 @@ function PANEL:GetList( callback, itemtype, tags, days, page )
 	
 	steamworks.GetList( itemtype, tags, items * ( page - 1 ), items, days, id, function( data )
 		
-		if cachevalue == true then self:CacheList( itemtype, tags, page, data ) end
+		if self.CacheEnabled == true then self:CacheList( itemtype, tags, page, data ) end
 		callback( data, math.ceil( data.totalresults / items ) )
 		
 	end )
@@ -230,16 +253,15 @@ function PANEL:GetSubscribed( callback, ugc, page, tags )
 	
 	local itemtype = "subscribed"
 	if ugc == true then itemtype = itemtype .. "_ugc" end
-	if cachevalue == true then self:CacheList( itemtype, tags, page, data ) end
+	if self.CacheEnabled == true then self:CacheList( itemtype, tags, page, data ) end
 	
 	callback( data, math.ceil( data.totalresults / items ) )
 	
 end
 
-local matcache = {}
 function PANEL:GetMat( id, callback )
 	
-	if cachevalue == true and matcache[ id ] != nil then callback( matcache[ id ] ) return end
+	if matcache[ id ] != nil then callback( matcache[ id ] ) return end
 	steamworks.Download( id, false, function( path )
 		
 		if path != nil then
@@ -253,10 +275,9 @@ function PANEL:GetMat( id, callback )
 	
 end
 
-local matpathcache = {}
 function PANEL:GetMatPath( path )
 	
-	if cachevalue == true and matpathcache[ path ] != nil then return matpathcache[ path ] end
+	if matpathcache[ path ] != nil then return matpathcache[ path ] end
 	
 	local mat = Material( path )
 	matpathcache[ path ] = mat
@@ -265,10 +286,9 @@ function PANEL:GetMatPath( path )
 	
 end
 
-local infocache = {}
 function PANEL:GetInfo( id, callback )
 	
-	if cachevalue == true and infocache[ id ] != nil then callback( infocache[ id ] ) return end
+	if infocache[ id ] != nil then callback( infocache[ id ] ) return end
 	steamworks.FileInfo( id, function( info )
 		
 		infocache[ id ] = info
@@ -278,10 +298,9 @@ function PANEL:GetInfo( id, callback )
 	
 end
 
-local votecache = {}
 function PANEL:GetVotes( id, callback )
 	
-	if cachevalue == true and votecache[ id ] != nil then callback( votecache[ id ] ) return end
+	if votecache[ id ] != nil then callback( votecache[ id ] ) return end
 	steamworks.VoteInfo( id, function( info )
 		
 		votecache[ id ] = info
@@ -526,24 +545,42 @@ function PANEL:CreateList( itemtype, tags, days, page )
 	docache:Dock( LEFT )
 	docache:SetTextColor( MenuColor.fg_alt )
 	docache:SetText( "#armenu_docache" )
-	docache:SetChecked( cachevalue )
+	docache:SetChecked( self.CacheEnabled )
 	function docache.OnChange( panel, val )
 		
-		if cachevalue != val then
+		if self.CacheEnabled != val then
 			
-			pagescache = {}
-			listcache = {}
-			matcache = {}
-			matpathcache = {}
-			infocache = {}
-			votecache = {}
+			clearcache()
 			
 			RunConsoleCommand( "armenu_cacheworkshop", ( val == true and 1 ) or 0 )
-			cachevalue = val
+			self.CacheEnabled = val
 			
 			self:CreateList( itemtype, tags, days, page )
 			
 		end
+		
+	end
+	
+	local clear = vgui.Create( "SoundButton" )
+	clear:SetParent( pagebg )
+	clear:Dock( RIGHT )
+	clear:SetTextColor( MenuColor.fg_alt )
+	clear:SetText( "#armenu_clearcache" )
+	function clear:Paint( w, h )
+		
+		local color = MenuColor.bgdull
+		if self:IsHovered() == true then color = MenuColor.active end
+		if self:IsDown() == true then color = MenuColor.selected end
+		draw.RoundedBox( 4, 0, 0, w, h, color )
+		
+	end
+	function clear.DoClick( panel )
+		
+		panel:DoClickSound()
+		
+		clearcache( true )
+		
+		self:CreateList( itemtype, tags, days, page )
 		
 	end
 	

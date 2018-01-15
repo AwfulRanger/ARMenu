@@ -55,7 +55,7 @@ end
 
 function PANEL:GetLocal( callback, page )
 	
-	if cachevalue == true then
+	if self.CacheEnabled == true then
 		
 		local cacheddata, cachedpages = self:GetCachedList( "local", "", page )
 		if cacheddata != nil and cachedpages != nil then callback( cacheddata, cachedpages ) return end
@@ -94,7 +94,7 @@ function PANEL:GetLocal( callback, page )
 		
 	end
 	
-	if cachevalue == true then self:CacheList( "local", "", page, data ) end
+	if self.CacheEnabled == true then self:CacheList( "local", "", page, data ) end
 	callback( data, math.ceil( data.totalresults / items ) )
 	
 end

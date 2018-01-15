@@ -1,5 +1,3 @@
---TODO: addons, demos and saves
---TODO: proper server browser
 local PANEL = {}
 
 
