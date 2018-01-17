@@ -11,11 +11,11 @@ PANEL.CurHover = false
 function PANEL:DoHoverSound( snd )
 	
 	local hover = self:IsHovered()
-	if hover != self.CurHover then
+	if hover ~= self.CurHover then
 		
 		snd = snd or self.HoverSound
 		
-		if hover == true and snd != nil then surface.PlaySound( snd ) end
+		if hover == true and snd ~= nil then surface.PlaySound( snd ) end
 		self.CurHover = hover
 		
 	end
@@ -32,7 +32,7 @@ function PANEL:DoClickSound( snd )
 	
 	snd = snd or self.ClickSound
 	
-	if snd != nil then surface.PlaySound( snd ) end
+	if snd ~= nil then surface.PlaySound( snd ) end
 	
 end
 

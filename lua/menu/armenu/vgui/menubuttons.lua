@@ -201,7 +201,7 @@ function PANEL:CreateChildren()
 		v.button:SetParent( self )
 		v.button:SetPos( 0, y )
 		v.button:InvalidateLayout( true )
-		if v.button.MenuSetup != nil then v.button:MenuSetup( self ) end
+		if v.button.MenuSetup ~= nil then v.button:MenuSetup( self ) end
 		
 		local dl, dt, dr, db = v.button:GetDockMargin()
 		y = y + v.button:GetTall() + db
@@ -219,7 +219,7 @@ end
 function PANEL:Paint( w, h )
 	
 	if self.LastIsInGame == nil then self.LastIsInGame = IsInGame() end
-	if self.LastIsInGame != IsInGame() then
+	if self.LastIsInGame ~= IsInGame() then
 		
 		self:CreateChildren()
 		self.LastIsInGame = IsInGame()

@@ -55,7 +55,7 @@ function PANEL:CreateInfo( res, ... )
 	
 	self.BaseClass.CreateInfo( self, res, ... )
 	
-	if res != nil then
+	if res ~= nil then
 		
 		local pad = math.Round( ScrH() * 0.01 )
 		local tall = math.Round( ScrH() * 0.05 )

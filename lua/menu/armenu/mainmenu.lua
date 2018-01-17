@@ -112,7 +112,7 @@ end
 
 function PANEL:SetInnerPanel( panel )
 	
-	if IsValid( panel ) != true then return end
+	if IsValid( panel ) ~= true then return end
 	
 	self:CloseMenus()
 	
@@ -120,7 +120,7 @@ function PANEL:SetInnerPanel( panel )
 	self.innerpanel:SetParent( self.inside )
 	self.innerpanel:Dock( FILL )
 	
-	if self.innerpanel.MenuSetup != nil then self.innerpanel:MenuSetup() end
+	if self.innerpanel.MenuSetup ~= nil then self.innerpanel:MenuSetup() end
 	
 end
 
@@ -183,7 +183,7 @@ end
 
 function PANEL:UpdateOptions()
 	
-	if IsValid( self:GetInnerPanel() ) == true and IsValid( self:GetInnerPanel().options ) == true and self:GetInnerPanel().options.CreateOptions != nil then self:GetInnerPanel().options:CreateOptions() end
+	if IsValid( self:GetInnerPanel() ) == true and IsValid( self:GetInnerPanel().options ) == true and self:GetInnerPanel().options.CreateOptions ~= nil then self:GetInnerPanel().options:CreateOptions() end
 	
 end
 
@@ -191,7 +191,7 @@ function PANEL:UpdateBackgroundImages()
 	
 	ClearBackgroundImages()
 	local gm = engine.ActiveGamemode()
-	if self:ScreenshotScan( "gamemodes/" .. gm .. "/backgrounds/" ) != true then self:ScreenshotScan( "backgrounds/" ) end
+	if self:ScreenshotScan( "gamemodes/" .. gm .. "/backgrounds/" ) ~= true then self:ScreenshotScan( "backgrounds/" ) end
 	ChangeBackground( gm )
 	
 end
@@ -212,7 +212,7 @@ function PANEL:UpdateLogo()
 			local from = file.Read( "gamemodes/" .. gm .. "/logo.png", "GAME" )
 			local to = file.Read( "armenu/logo/" .. gm .. ".png" )
 			
-			if from != to then file.Write( "armenu/logo/" .. gm .. ".png", from ) end
+			if from ~= to then file.Write( "armenu/logo/" .. gm .. ".png", from ) end
 			
 			logos[ gm ] = Material( "data/armenu/logo/" .. gm .. ".png" )
 			
@@ -222,9 +222,9 @@ function PANEL:UpdateLogo()
 	
 	if IsValid( self:GetInnerPanel() ) == true then return end
 	
-	if mat != nil and mat:IsError() != true then
+	if mat ~= nil and mat:IsError() ~= true then
 		
-		if IsValid( self.logo ) != true then
+		if IsValid( self.logo ) ~= true then
 			
 			self.logo = vgui.Create( "DImage" )
 			self.logo:SetParent( self )
@@ -258,7 +258,7 @@ function UpdateSteamName( id, time )
 	if time == nil then time = 0.2 end
 	
 	local name = steamworks.GetPlayerName( id )
-	if name != "" and name != "[unknown]" then
+	if name ~= "" and name ~= "[unknown]" then
 		
 		GetMainMenu():Call( "SteamName( \"" .. id .. "\", \"" .. name .. "\" )" )
 		
@@ -321,8 +321,8 @@ function UpdateMapList()
 	local innerpanel = GetMainMenu():GetInnerPanel()
 	if IsValid( innerpanel ) == true then
 		
-		if innerpanel.CreateMapCategories != nil then innerpanel:CreateMapCategories( maps ) end
-		if innerpanel.CreateMapList != nil then innerpanel:CreateMapList() end
+		if innerpanel.CreateMapCategories ~= nil then innerpanel:CreateMapCategories( maps ) end
+		if innerpanel.CreateMapList ~= nil then innerpanel:CreateMapList() end
 		
 	end
 	
@@ -340,17 +340,17 @@ function UpdateServerSettings()
 	
 	local gm = engine.ActiveGamemode()
 	local settings = file.Read( "gamemodes/" .. gm .. "/" .. gm .. ".txt", "GAME" )
-	if settings != nil then
+	if settings ~= nil then
 		
 		local kv = util.KeyValuesToTable( settings )
-		if kv.settings != nil then
+		if kv.settings ~= nil then
 			
 			tbl.settings = kv.settings
 			
 			for _, v in pairs( tbl.settings ) do
 				
 				v.Value = GetConVar( v.name ):GetString()
-				v.Singleplayer = v.singleplayer != nil
+				v.Singleplayer = v.singleplayer ~= nil
 				
 			end
 			
@@ -415,7 +415,7 @@ local function IsServerBlacklisted( address, hostname, description, gm, map )
 		local tr = hostname
 		for bad, good in pairs( Blacklist.Translations ) do
 			
-			while string.find( tr, bad ) != nil do
+			while string.find( tr, bad ) ~= nil do
 				
 				local s, e = string.find( tr, bad )
 				tr = string.sub( tr, 0, s - 1 ) .. good .. string.sub( tr, e + 1 )
@@ -424,13 +424,13 @@ local function IsServerBlacklisted( address, hostname, description, gm, map )
 			
 		end
 		
-		for i = 1, #blacklist.TranslatedHostnames do if string.match( tr, blacklist.TranslatedHostnames[ i ] ) != nil then return true end end
+		for i = 1, #blacklist.TranslatedHostnames do if string.match( tr, blacklist.TranslatedHostnames[ i ] ) ~= nil then return true end end
 		
 	end
-	for i = 1, #blacklist.Hostnames do if string.match( hostname, blacklist.Hostnames[ i ] ) != nil then return true end end
-	for i = 1, #blacklist.Descripts do if string.match( description, blacklist.Descripts[ i ] ) != nil then return true end end
-	for i = 1, #blacklist.Gamemodes do if string.match( gm, blacklist.Gamemodes[ i ] ) != nil then return true end end
-	for i = 1, #blacklist.Maps do if string.match( map, blacklist.Maps[ i ] ) != nil then return true end end
+	for i = 1, #blacklist.Hostnames do if string.match( hostname, blacklist.Hostnames[ i ] ) ~= nil then return true end end
+	for i = 1, #blacklist.Descripts do if string.match( description, blacklist.Descripts[ i ] ) ~= nil then return true end end
+	for i = 1, #blacklist.Gamemodes do if string.match( gm, blacklist.Gamemodes[ i ] ) ~= nil then return true end end
+	for i = 1, #blacklist.Maps do if string.match( map, blacklist.Maps[ i ] ) ~= nil then return true end end
 	
 	return false
 	
@@ -448,10 +448,10 @@ function GetServers( t, id )
 		
 		Callback = function( ping, name, desc, map, players, maxplayers, botplayers, pass, lastplayed, address, gm, workshopid )
 			
-			if servers[ t ] != nil and servers[ t ][ address ] == true then return end
+			if servers[ t ] ~= nil and servers[ t ][ address ] == true then return end
 			servers[ t ][ address ] = true
 			
-			if IsServerBlacklisted( address, name, desc, gm, map ) != true then
+			if IsServerBlacklisted( address, name, desc, gm, map ) ~= true then
 				
 				name = string.JavascriptSafe( name )
 				desc = string.JavascriptSafe( desc )
@@ -460,7 +460,7 @@ function GetServers( t, id )
 				gm = string.JavascriptSafe( gm )
 				workshopid = string.JavascriptSafe( workshopid )
 				
-				if pass != nil then
+				if pass ~= nil then
 					
 					pass = "true"
 					
@@ -511,7 +511,7 @@ end
 
 function LanguageChanged( lang )
 	
-	if IsValid( GetMainMenu() ) != true then return end
+	if IsValid( GetMainMenu() ) ~= true then return end
 	
 	UpdateLanguages()
 	GetMainMenu():Call( "UpdateLanguage( \"" .. lang:JavascriptSafe() .. "\" )" )
@@ -534,7 +534,7 @@ end
 
 hook.Add( "GameContentChanged", "RefreshMainMenu", function()
 	
-	if IsValid( GetMainMenu() ) != true then return end
+	if IsValid( GetMainMenu() ) ~= true then return end
 	
 	GetMainMenu():RefreshContent()
 	

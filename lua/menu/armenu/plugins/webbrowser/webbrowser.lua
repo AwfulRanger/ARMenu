@@ -27,7 +27,7 @@ AddPlugin( name, {
 			
 			if url == nil then url = "" end
 			if url == "about:home" then url = home:GetString() end
-			if url != "" and string.find( url, "%." ) == nil and string.find( url, ":" ) == nil then url = string.Replace( query:GetString(), "<query>", url ) end
+			if url ~= "" and string.find( url, "%." ) == nil and string.find( url, ":" ) == nil then url = string.Replace( query:GetString(), "<query>", url ) end
 			
 			local panel = vgui.Create( "DPanel" )
 			
@@ -217,7 +217,7 @@ AddPlugin( name, {
 			
 			function html:ConsoleMessage( msg, file, line )
 				
-				if isstring( msg ) != true then msg = "*js variable*" end
+				if isstring( msg ) ~= true then msg = "*js variable*" end
 				
 				if isstring( file ) == true and isnumber( line ) == true then
 					
@@ -262,13 +262,13 @@ AddPlugin( name, {
 				for i = 1, #ARBrowser.Browsers do
 					
 					local frame = ARBrowser.Browsers.frame
-					if IsValid( frame ) != true then return end
+					if IsValid( frame ) ~= true then return end
 					local sheet = ARBrowser.Browsers.sheet
-					if IsValid( sheet ) != true then return end
+					if IsValid( sheet ) ~= true then return end
 					local tab = sheet:GetActiveTab()
-					if IsValid( tab ) != true or tab.browser == nil then return end
+					if IsValid( tab ) ~= true or tab.browser == nil then return end
 					local html = tab.browser.html
-					if IsValid( html ) != true then return end
+					if IsValid( html ) ~= true then return end
 					
 					local mx, my = gui.MousePos()
 					local fx, fy, fw, fh = frame:GetBounds()

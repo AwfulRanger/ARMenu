@@ -88,7 +88,7 @@ function PANEL:CreateServers( gm )
 		
 	end )
 	
-	if gm != nil and servertbl[ gm ] != nil then
+	if gm ~= nil and servertbl[ gm ] ~= nil then
 		
 		for i = 1, #servertbl[ gm ] do
 			
@@ -109,7 +109,7 @@ end
 
 local function newcategory( name, tbl, parent, panel )
 	
-	if IsValid( parent ) != true then return end
+	if IsValid( parent ) ~= true then return end
 	
 	local playernum = playerstbl[ name ] or 0
 	local servernum = #tbl
@@ -125,13 +125,13 @@ local function newcategory( name, tbl, parent, panel )
 		local playernum = playerstbl[ name ] or 0
 		local servernum = #tbl
 		
-		if playernum != self.playernum then
+		if playernum ~= self.playernum then
 			
 			self:SetColumnText( 2, playernum )
 			self.playernum = playernum
 			
 		end
-		if servernum != self.servernum then
+		if servernum ~= self.servernum then
 			
 			self:SetColumnText( 3, servernum )
 			self.servernum = servernum
@@ -211,7 +211,7 @@ function PANEL:CreateList( query )
 		Type = query,
 		Callback = function( ping, name, desc, map, players, maxplayers, botplayers, pass, lastplayed, address, gm, workshopid )
 			
-			if stop == true or curquery != query or IsValid( self ) != true then
+			if stop == true or curquery ~= query or IsValid( self ) ~= true then
 				
 				stop = false
 				return false
@@ -291,7 +291,7 @@ function PANEL:CreateInfo( ip, name, map, pass )
 		
 	end
 	
-	if name != nil then
+	if name ~= nil then
 		
 		local namelabel = vgui.Create( "DLabel" )
 		namelabel:SetParent( self.info )
@@ -301,7 +301,7 @@ function PANEL:CreateInfo( ip, name, map, pass )
 		namelabel:SetTextColor( MenuColor.fg_alt )
 		
 	end
-	if ip != nil then
+	if ip ~= nil then
 		
 		local iplabel = vgui.Create( "DLabel" )
 		iplabel:SetParent( self.info )
@@ -311,7 +311,7 @@ function PANEL:CreateInfo( ip, name, map, pass )
 		iplabel:SetTextColor( MenuColor.fg_alt )
 		
 	end
-	if map != nil then
+	if map ~= nil then
 		
 		local maplabel = vgui.Create( "DLabel" )
 		maplabel:SetParent( self.info )
@@ -338,7 +338,7 @@ function PANEL:CreateInfo( ip, name, map, pass )
 		
 	end
 	
-	if ip != nil then
+	if ip ~= nil then
 		
 		local joinpad = ScrH() * 0.01
 		local join = vgui.Create( "SoundButton" )
@@ -412,7 +412,7 @@ function PANEL:CreateInfo( ip, name, map, pass )
 		
 	end )
 	
-	if ip != nil then
+	if ip ~= nil then
 		
 		serverlist.PlayerList( ip, function( tbl )
 			
@@ -533,7 +533,7 @@ function PANEL:MenuSetup()
 	refresh:SetFont( "DermaDefaultBold" )
 	function refresh:Paint( w, h )
 		
-		if active != self.active then
+		if active ~= self.active then
 			
 			self.active = active
 			

@@ -22,7 +22,7 @@ local dogamemodes = function()
 			local from = file.Read( "gamemodes/" .. name .. "/icon24.png", "GAME" )
 			local to = file.Read( "armenu/icon24/" .. name .. ".png" )
 			
-			if from != to then file.Write( "armenu/icon24/" .. name .. ".png", from ) end
+			if from ~= to then file.Write( "armenu/icon24/" .. name .. ".png", from ) end
 			
 			gamemodeicons[ i ] = Material( "data/armenu/icon24/" .. name .. ".png" )
 			
@@ -61,7 +61,7 @@ function PANEL:Init()
 			button:SetTall( ScrH() * 0.04 )
 			button:SetText( "" )
 			local tip = gamemodes[ i ].name
-			if gamemodes[ i ].workshopid != "" then tip = tip .. " (" .. gamemodes[ i ].workshopid .. ")" end
+			if gamemodes[ i ].workshopid ~= "" then tip = tip .. " (" .. gamemodes[ i ].workshopid .. ")" end
 			button:SetTooltip( tip )
 			function button:Paint( w, h )
 				
@@ -75,7 +75,7 @@ function PANEL:Init()
 				draw.RoundedBox( 4, 0, 0, w, h, color )
 				
 				local mat = gamemodeicons[ i ]
-				if mat != nil and mat:IsError() != true then
+				if mat ~= nil and mat:IsError() ~= true then
 					
 					surface.SetDrawColor( MenuColor.white )
 					surface.SetMaterial( mat )

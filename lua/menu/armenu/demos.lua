@@ -52,7 +52,7 @@ function PANEL:GetLocal( callback, page )
 	if self.CacheEnabled == true then
 		
 		local cacheddata, cachedpages = self:GetCachedList( "local", "", page )
-		if cacheddata != nil and cachedpages != nil then callback( cacheddata, cachedpages ) return end
+		if cacheddata ~= nil and cachedpages ~= nil then callback( cacheddata, cachedpages ) return end
 		
 	end
 	
@@ -71,7 +71,7 @@ function PANEL:GetLocal( callback, page )
 	for i = 1, #f do
 		
 		local a = f[ i + ( items * ( page - 1 ) ) ]
-		if a != nil then
+		if a ~= nil then
 			
 			local strip = string.StripExtension( a )
 			table.insert( data.results, {
@@ -130,7 +130,7 @@ function PANEL:CreateInfo( res, ... )
 	
 	self.BaseClass.CreateInfo( self, res, ... )
 	
-	if res != nil then
+	if res ~= nil then
 		
 		local pad = math.Round( ScrH() * 0.01 )
 		local tall = math.Round( ScrH() * 0.05 )
@@ -250,7 +250,7 @@ function PANEL:CreateInfo( res, ... )
 				
 				steamworks.FileInfo( res, function( info )
 					
-					if info.previewid != nil then
+					if info.previewid ~= nil then
 						
 						steamworks.Download( info.previewid, true, function( path )
 							
@@ -269,7 +269,7 @@ function PANEL:CreateInfo( res, ... )
 				
 				steamworks.FileInfo( res, function( info )
 					
-					if info.previewid != nil then
+					if info.previewid ~= nil then
 						
 						steamworks.Download( info.previewid, true, function( path )
 							

@@ -18,7 +18,7 @@ function include( path, ... )
 		while i > -1 do
 			
 			local newinfo = debug.getinfo( i )
-			if newinfo != nil and newinfo.short_src != "[C]" then
+			if newinfo ~= nil and newinfo.short_src ~= "[C]" then
 				
 				info = newinfo
 				i = i + 1
@@ -34,7 +34,7 @@ function include( path, ... )
 		local source = string.gsub( string.GetPathFromFilename( info.short_src ) .. oldpath, "/[^/]-/%.%./", "/" )
 		if string.sub( source, 1, 4 ) == "lua/" then source = string.sub( source, 5 ) end
 		
-		if source != nil and source != "" and file.Exists( "lua/" .. source, "GAME" ) == true then
+		if source ~= nil and source ~= "" and file.Exists( "lua/" .. source, "GAME" ) == true then
 			
 			if file.Exists( source, "LuaMenu" ) == true then return includeunsafe( source, ... ) end
 			local func = CompileString( file.Read( "lua/" .. source, "GAME" ), "lua/" .. source )
@@ -68,7 +68,7 @@ end, nil, "Reload ARMenu" )
 concommand.Add( "lua_run_menu", function( ply, cmd, args, arg )
 	
 	local msg = RunString( arg, "lua_run_menu", false )
-	if msg != nil then print( msg ) end
+	if msg ~= nil then print( msg ) end
 	
 end )
 

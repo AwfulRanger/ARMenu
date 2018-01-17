@@ -1,5 +1,5 @@
 file.CreateDir( "armenu" )
-if file.Exists( "armenu/enabled.dat", "DATA" ) != true then file.Write( "armenu/enabled.dat", "true" ) end
+if file.Exists( "armenu/enabled.dat", "DATA" ) ~= true then file.Write( "armenu/enabled.dat", "true" ) end
 
 local enabled = tobool( file.Read( "armenu/enabled.dat", "DATA" ) )
 
@@ -14,7 +14,7 @@ concommand.Add( "armenu_toggle", function( ply, cmd, args, arg )
 		
 	end
 	
-	if enabled != true then
+	if enabled ~= true then
 		
 		include( "menu/armenu/menu.lua" )
 		enabled = true

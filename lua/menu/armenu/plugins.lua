@@ -14,13 +14,13 @@ local function setenabled( name, bool )
 	enabled[ name ] = bool
 	file.Write( "armenu/plugins.dat", util.TableToJSON( enabled ) )
 	local plugin = plugins[ name ]
-	if plugin != nil then
+	if plugin ~= nil then
 		
-		if bool == true and plugin.OnEnabled != nil then
+		if bool == true and plugin.OnEnabled ~= nil then
 			
 			plugin.OnEnabled()
 			
-		elseif bool != true and plugin.OnDisabled != nil then
+		elseif bool ~= true and plugin.OnDisabled ~= nil then
 			
 			plugin.OnDisabled()
 			
@@ -50,7 +50,7 @@ hook.Add( "MenuLoaded", "Plugins", function()
 	
 	for _, v in pairs( plugins ) do
 		
-		if getenabled( _ ) == true and v.OnEnabled != nil then v.OnEnabled() end
+		if getenabled( _ ) == true and v.OnEnabled ~= nil then v.OnEnabled() end
 		
 	end
 	

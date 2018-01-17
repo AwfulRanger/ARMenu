@@ -58,7 +58,7 @@ function PANEL:GetLocal( callback, page )
 	if self.CacheEnabled == true then
 		
 		local cacheddata, cachedpages = self:GetCachedList( "local", "", page )
-		if cacheddata != nil and cachedpages != nil then callback( cacheddata, cachedpages ) return end
+		if cacheddata ~= nil and cachedpages ~= nil then callback( cacheddata, cachedpages ) return end
 		
 	end
 	
@@ -77,7 +77,7 @@ function PANEL:GetLocal( callback, page )
 	for i = 1, #f do
 		
 		local a = f[ i + ( items * ( page - 1 ) ) ]
-		if a != nil then
+		if a ~= nil then
 			
 			local strip = string.StripExtension( a )
 			table.insert( data.results, {
@@ -127,7 +127,7 @@ function PANEL:CreateInfo( res, ... )
 	
 	self.BaseClass.CreateInfo( self, res, ... )
 	
-	if res != nil then
+	if res ~= nil then
 		
 		local pad = math.Round( ScrH() * 0.01 )
 		local tall = math.Round( ScrH() * 0.05 )
@@ -223,7 +223,7 @@ function PANEL:CreateInfo( res, ... )
 				
 				steamworks.FileInfo( res, function( info )
 					
-					if info.previewid != nil then
+					if info.previewid ~= nil then
 						
 						steamworks.Download( info.previewid, true, function( path )
 							
@@ -269,27 +269,27 @@ function PANEL:Publish( path, icon )
 		local function findtag( tagname )
 			
 			local check = panel:Find( "tag_" .. tagname )
-			if check:GetChecked() != true then return true end
+			if check:GetChecked() ~= true then return true end
 			
-			if tag != nil then error_:SetText( "Choose only one tag!" ) return false end
+			if tag ~= nil then error_:SetText( "Choose only one tag!" ) return false end
 			
 			tag = tagname
 			return true
 			
 		end
 		
-		if findtag( "scenes" ) != true then return end
-		if findtag( "machines" ) != true then return end
-		if findtag( "buildings" ) != true then return end
-		if findtag( "courses" ) != true then return end
-		if findtag( "others" ) != true then return end
+		if findtag( "scenes" ) ~= true then return end
+		if findtag( "machines" ) ~= true then return end
+		if findtag( "buildings" ) ~= true then return end
+		if findtag( "courses" ) ~= true then return end
+		if findtag( "others" ) ~= true then return end
 		
 		if tag == nil then error_:SetText( "Choose a tag!" ) return end
 		
 		if title:GetText() == "" then error_:SetText( "You must provide a title!" ) return end
 		
 		local err = self:FinishPublish( path, icon, title:GetText(), description:GetText(), tag )
-		if err != nil then error_:SetText( err ) return end
+		if err ~= nil then error_:SetText( err ) return end
 		
 		panel:Remove()
 		

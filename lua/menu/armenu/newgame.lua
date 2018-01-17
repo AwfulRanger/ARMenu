@@ -44,7 +44,7 @@ end
 local function newcategory( name, tbl, parent )
 	
 	local num = 0
-	if tbl != nil then num = #tbl end
+	if tbl ~= nil then num = #tbl end
 	
 	local button = vgui.Create( "SoundButton" )
 	button:SetParent( parent )
@@ -103,7 +103,7 @@ function PANEL:CreateMapCategories( maplist )
 	
 	for _, v in SortedPairs( maplist ) do
 		
-		if _ != "Favourites" and _ != "Sandbox" then
+		if _ ~= "Favourites" and _ ~= "Sandbox" then
 			
 			local cat = newcategory( _, v, self.category )
 			
@@ -119,7 +119,7 @@ function PANEL:CreateMapList( category )
 	
 	timer.Simple( 0, function()
 		
-		if IsValid( self ) != true then return end
+		if IsValid( self ) ~= true then return end
 		
 		if category == nil then category = currentcat end
 		if category == nil then category = "Favourites" end
@@ -165,7 +165,7 @@ function PANEL:CreateMapList( category )
 				if currentmap == maplist[ i ] then color = MenuColor.selected end
 				draw.RoundedBox( 4, 0, 0, w, h, color )
 				
-				if mat != nil then
+				if mat ~= nil then
 					
 					surface.SetDrawColor( MenuColor.white )
 					surface.SetMaterial( mat )
@@ -184,7 +184,7 @@ function PANEL:CreateMapList( category )
 			
 			local isfav = false
 			local favs = GetMapList().Favourites
-			if favs != nil then
+			if favs ~= nil then
 				
 				for i_ = 1, #favs do
 					
@@ -209,7 +209,7 @@ function PANEL:CreateMapList( category )
 				local mat = favmat
 				if self:IsHovered() == true then
 					
-					if isfav != true then
+					if isfav ~= true then
 						
 						mat = addfavmat
 						
@@ -378,9 +378,9 @@ function PANEL:CreateOptions()
 			local oldmp = gamemaxplayers
 			gamemaxplayers = value_
 			
-			if ( oldmp == 1 and value_ != 1 ) or ( oldmp != 1 and value_ == 1 ) then self:CreateOptions() end
+			if ( oldmp == 1 and value_ ~= 1 ) or ( oldmp ~= 1 and value_ == 1 ) then self:CreateOptions() end
 			
-			if value != tostring( value_ ) then self:SetValue( value_ ) end
+			if value ~= tostring( value_ ) then self:SetValue( value_ ) end
 			
 		end
 		function mpwang:OnEnter()
@@ -428,7 +428,7 @@ function PANEL:CreateOptions()
 			lan:SetText( "#lan_server" )
 			lan:SetTextColor( MenuColor.fg_alt )
 			lan:SetTooltip( sv_lan_help )
-			lan:SetValue( ( gamelan != 0 and true ) or false )
+			lan:SetValue( ( gamelan ~= 0 and true ) or false )
 			function lan:OnChange( value )
 				
 				gamelan = ( value == false and 0 ) or 1
@@ -443,7 +443,7 @@ function PANEL:CreateOptions()
 			p2p:SetText( "#p2p_server" )
 			p2p:SetTextColor( MenuColor.fg_alt )
 			p2p:SetTooltip( p2p_enabled_help )
-			p2p:SetValue( ( gamep2p != 0 and true ) or false )
+			p2p:SetValue( ( gamep2p ~= 0 and true ) or false )
 			function p2p:OnChange( value )
 				
 				gamep2p = ( value == false and 0 ) or 1
@@ -458,7 +458,7 @@ function PANEL:CreateOptions()
 			friends:SetText( "#p2p_server_friendsonly" )
 			friends:SetTextColor( MenuColor.fg_alt )
 			friends:SetTooltip( p2p_friendsonly_help )
-			friends:SetValue( ( gamefriends != 0 and true ) or false )
+			friends:SetValue( ( gamefriends ~= 0 and true ) or false )
 			function friends:OnChange( value )
 				
 				gamefriends = ( value == false and 0 ) or 1
@@ -475,16 +475,16 @@ function PANEL:CreateOptions()
 		end
 		
 		local gmoptions = file.Read( "gamemodes/" .. engine.ActiveGamemode() .. "/" .. engine.ActiveGamemode() .. ".txt", "GAME" )
-		if gmoptions != nil then
+		if gmoptions ~= nil then
 			
 			gmoptions = util.KeyValuesToTable( gmoptions )
-			if gmoptions != nil and gmoptions.settings != nil then
+			if gmoptions ~= nil and gmoptions.settings ~= nil then
 				
 				gmoptions = gmoptions.settings
 				for i = 1, #gmoptions do
 					
 					local option = gmoptions[ i ]
-					if option != nil and ( gamemaxplayers > 1 or option.singleplayer != nil ) then
+					if option ~= nil and ( gamemaxplayers > 1 or option.singleplayer ~= nil ) then
 						
 						local t = string.lower( option.type or "" )
 						if t == "checkbox" then
@@ -495,12 +495,12 @@ function PANEL:CreateOptions()
 							check:DockMargin( 0, 0, 0, pad )
 							check:SetText( language.GetPhrase( option.text or "" ) )
 							check:SetTextColor( MenuColor.fg_alt )
-							if option.help != nil then check:SetTooltip( language.GetPhrase( option.help ) ) end
+							if option.help ~= nil then check:SetTooltip( language.GetPhrase( option.help ) ) end
 							local val = getoption( option.name, option.default )
-							if val != nil then check:SetValue( ( val != 0 and true ) or false ) end
+							if val ~= nil then check:SetValue( ( val ~= 0 and true ) or false ) end
 							function check:OnChange( value )
 								
-								if option.name != nil then setoption( option.name, ( value == false and 0 ) or 1 ) end
+								if option.name ~= nil then setoption( option.name, ( value == false and 0 ) or 1 ) end
 								
 							end
 							
@@ -510,7 +510,7 @@ function PANEL:CreateOptions()
 							num:SetParent( panel )
 							num:Dock( TOP )
 							num:DockMargin( 0, 0, 0, pad )
-							if option.help != nil then num:SetTooltip( language.GetPhrase( option.help ) ) end
+							if option.help ~= nil then num:SetTooltip( language.GetPhrase( option.help ) ) end
 							function num:Paint( w, h )
 							end
 							
@@ -530,7 +530,7 @@ function PANEL:CreateOptions()
 							if val then wang:SetValue( val ) end
 							function wang:OnValueChanged( value )
 								
-								if option.name != nil then setoption( option.name, value ) end
+								if option.name ~= nil then setoption( option.name, value ) end
 								
 							end
 							
@@ -540,7 +540,7 @@ function PANEL:CreateOptions()
 							text:SetParent( panel )
 							text:Dock( TOP )
 							text:DockMargin( 0, 0, 0, pad )
-							if option.help != nil then text:SetTooltip( language.GetPhrase( option.help ) ) end
+							if option.help ~= nil then text:SetTooltip( language.GetPhrase( option.help ) ) end
 							function text:Paint( w, h )
 							end
 							
@@ -555,10 +555,10 @@ function PANEL:CreateOptions()
 							entry:SetParent( text )
 							entry:Dock( FILL )
 							local val = getoption( option.name, option.default )
-							if val != nil then entry:SetValue( val ) end
+							if val ~= nil then entry:SetValue( val ) end
 							function entry:OnValueChange( value )
 								
-								if option.name != nil then setoption( option.name, value ) end
+								if option.name ~= nil then setoption( option.name, value ) end
 								
 							end
 							

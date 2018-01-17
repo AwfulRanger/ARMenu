@@ -38,7 +38,7 @@ local dogamemodes = function()
 			local from = file.Read( "gamemodes/" .. name .. "/icon24.png", "GAME" )
 			local to = file.Read( "armenu/icon24/" .. name .. ".png" )
 			
-			if from != to then file.Write( "armenu/icon24/" .. name .. ".png", from ) end
+			if from ~= to then file.Write( "armenu/icon24/" .. name .. ".png", from ) end
 			
 			gamemodeicons[ i ] = Material( "../data/armenu/icon24/" .. name .. ".png" )
 			
@@ -253,7 +253,7 @@ local function createbuttons( canvas )
 		local gm = engine.ActiveGamemode()
 		
 		local mat = gamemodeicons[ gamemodenames[ gm ] ]
-		if mat != nil and mat:IsError() != true then
+		if mat ~= nil and mat:IsError() ~= true then
 			
 			surface.SetDrawColor( MenuColor.white )
 			surface.SetMaterial( mat )
@@ -264,7 +264,7 @@ local function createbuttons( canvas )
 		local bw = s + ( spad * 2 )
 		
 		local name = gamemodes[ gamemodenames[ gm ] ]
-		if name != nil and name.title != nil then
+		if name ~= nil and name.title ~= nil then
 			
 			surface.SetFont( self:GetFont() )
 			local tw, th = surface.GetTextSize( name.title )
@@ -276,7 +276,7 @@ local function createbuttons( canvas )
 			
 		end
 		
-		if w != bw then self:SetWide( bw ) end
+		if w ~= bw then self:SetWide( bw ) end
 		
 	end
 	function gms:DoClick()
@@ -335,7 +335,7 @@ function PANEL:CreateChildren()
 			v.button:Dock( LEFT )
 			v.button:InvalidateLayout( true )
 			--v.button:SetPos( lx, 0 )
-			if v.button.MenuSetup != nil then v.button:MenuSetup( self ) end
+			if v.button.MenuSetup ~= nil then v.button:MenuSetup( self ) end
 			
 			local dl, dt, dr, db = v.button:GetDockMargin()
 			lx = lx + v.button:GetWide() + dr
@@ -355,7 +355,7 @@ function PANEL:CreateChildren()
 			v.button:Dock( RIGHT )
 			v.button:InvalidateLayout( true )
 			---v.button:SetPos( ScrW() - rx - v.button:GetWide(), 0 )
-			if v.button.MenuSetup != nil then v.button:MenuSetup( self ) end
+			if v.button.MenuSetup ~= nil then v.button:MenuSetup( self ) end
 			
 			local dl, dt, dr, db = v.button:GetDockMargin()
 			rx = rx + v.button:GetWide() + dl
@@ -386,7 +386,7 @@ function PANEL:Paint( w, h )
 	surface.DrawRect( 0, 0, w, h )
 	
 	if self.LastIsInGame == nil then self.LastIsInGame = IsInGame() end
-	if self.LastIsInGame != IsInGame() then
+	if self.LastIsInGame ~= IsInGame() then
 		
 		self:CreateChildren()
 		self.LastIsInGame = IsInGame()
@@ -394,7 +394,7 @@ function PANEL:Paint( w, h )
 	end
 	local valid = IsValid( GetMainMenu() ) == true and IsValid( GetMainMenu():GetInnerPanel() ) == true
 	if self.LastInnerPanel == nil then self.LastInnerPanel = valid end
-	if self.LastInnerPanel != valid then
+	if self.LastInnerPanel ~= valid then
 		
 		self:CreateChildren()
 		self.LastInnerPanel = valid

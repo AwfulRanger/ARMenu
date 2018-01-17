@@ -42,8 +42,8 @@ function PANEL:Init()
 		end
 		
 		local image
-		if games[ i ].installed != true then image = notinstalled end
-		if games[ i ].owned != true then image = notowned end
+		if games[ i ].installed ~= true then image = notinstalled end
+		if games[ i ].owned ~= true then image = notowned end
 		
 		local spad = math.Round( panel:GetTall() * 0.1 )
 		local s = math.min( 16, panel:GetTall() - ( spad * 2 ) )
@@ -100,18 +100,18 @@ function PANEL:Init()
 			status:DockMargin( spad, hpad, spad, hpad )
 			status:SetSize( psize, psize )
 			status:SetMaterial( image )
-			if games[ i ].owned != true then
+			if games[ i ].owned ~= true then
 				
 				status:SetTooltip( "#armenu_notowned" )
 				
-			elseif games[ i ].installed != true then
+			elseif games[ i ].installed ~= true then
 				
 				status:SetTooltip( "#armenu_notinstalled" )
 				
 			end
 			function status:Paint( w, h )
 				
-				if self:GetMaterial() != nil then
+				if self:GetMaterial() ~= nil then
 					
 					local s = math.min( 16, w, h )
 					surface.SetDrawColor( MenuColor.white )
@@ -125,14 +125,14 @@ function PANEL:Init()
 		end
 		
 		local mat = gameicons[ i ]
-		--if mat != nil and mat:IsError() != true then
+		--if mat ~= nil and mat:IsError() ~= true then
 			
 			local icon = vgui.Create( "DImage" )
 			icon:SetParent( panel )
 			icon:Dock( LEFT )
 			icon:DockMargin( 0, hpad, spad, hpadb )
 			icon:SetSize( s, s )
-			if mat != nil and mat:IsError() != true then icon:SetMaterial( mat ) end
+			if mat ~= nil and mat:IsError() ~= true then icon:SetMaterial( mat ) end
 			
 		--end
 		

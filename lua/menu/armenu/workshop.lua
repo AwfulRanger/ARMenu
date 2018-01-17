@@ -82,7 +82,7 @@ end
 
 function PANEL:GetTags( tags )
 	
-	if tags != nil then return tags end
+	if tags ~= nil then return tags end
 	
 	tags = table.Copy( self.Tags )
 	for _, v in pairs( self.ExtraTags ) do
@@ -130,7 +130,7 @@ function PANEL:GetCachedList( itemtype, tags, page )
 		for i = 1, #tags do
 			
 			tagstr = tagstr .. tags[ i ]
-			if i != #tags then tagstr = tagstr .. "," end
+			if i ~= #tags then tagstr = tagstr .. "," end
 			
 		end
 		
@@ -138,7 +138,7 @@ function PANEL:GetCachedList( itemtype, tags, page )
 		
 	end
 	
-	if listcache[ itemtype ] != nil and listcache[ itemtype ][ tags ] != nil and listcache[ itemtype ][ tags ][ page ] != nil then
+	if listcache[ itemtype ] ~= nil and listcache[ itemtype ][ tags ] ~= nil and listcache[ itemtype ][ tags ][ page ] ~= nil then
 		
 		return listcache[ itemtype ][ tags ][ page ], pagescache[ itemtype ][ tags ]
 		
@@ -156,7 +156,7 @@ function PANEL:CacheList( itemtype, tags, page, data )
 		for i = 1, #tags do
 			
 			tagstr = tagstr .. tags[ i ]
-			if i != #tags then tagstr = tagstr .. "," end
+			if i ~= #tags then tagstr = tagstr .. "," end
 			
 		end
 		
@@ -186,14 +186,14 @@ function PANEL:GetList( callback, itemtype, tags, days, page )
 	for i = 1, #tags do
 		
 		tagstr = tagstr .. tags[ i ]
-		if i != #tags then tagstr = tagstr .. "," end
+		if i ~= #tags then tagstr = tagstr .. "," end
 		
 	end
 	
 	if self.CacheEnabled == true then
 		
 		local cacheddata, cachedpages = self:GetCachedList( itemtype, tagstr, page )
-		if cacheddata != nil and cachedpages != nil then callback( cacheddata, cachedpages ) return end
+		if cacheddata ~= nil and cachedpages ~= nil then callback( cacheddata, cachedpages ) return end
 		
 	end
 	
@@ -259,7 +259,7 @@ function PANEL:GetSubscribed( callback, ugc, page, tags )
 	for i = 1, num do
 		
 		local a = addons[ i + ( items * ( page - 1 ) ) ]
-		if a != nil then data.results[ i ] = a.wsid end
+		if a ~= nil then data.results[ i ] = a.wsid end
 		
 	end
 	
@@ -273,10 +273,10 @@ end
 
 function PANEL:GetMat( id, callback )
 	
-	if matcache[ id ] != nil then callback( matcache[ id ] ) return end
+	if matcache[ id ] ~= nil then callback( matcache[ id ] ) return end
 	steamworks.Download( id, false, function( path )
 		
-		if path != nil then
+		if path ~= nil then
 			
 			matcache[ id ] = AddonMaterial( path )
 			callback( matcache[ id ] )
@@ -289,7 +289,7 @@ end
 
 function PANEL:GetMatPath( path )
 	
-	if matpathcache[ path ] != nil then return matpathcache[ path ] end
+	if matpathcache[ path ] ~= nil then return matpathcache[ path ] end
 	
 	local mat = Material( path )
 	matpathcache[ path ] = mat
@@ -300,7 +300,7 @@ end
 
 function PANEL:GetInfo( id, callback )
 	
-	if infocache[ id ] != nil then callback( infocache[ id ] ) return end
+	if infocache[ id ] ~= nil then callback( infocache[ id ] ) return end
 	steamworks.FileInfo( id, function( info )
 		
 		infocache[ id ] = info
@@ -312,7 +312,7 @@ end
 
 function PANEL:GetVotes( id, callback )
 	
-	if votecache[ id ] != nil then callback( votecache[ id ] ) return end
+	if votecache[ id ] ~= nil then callback( votecache[ id ] ) return end
 	steamworks.VoteInfo( id, function( info )
 		
 		votecache[ id ] = info
@@ -325,7 +325,7 @@ end
 local textcache = {}
 function PANEL:TextWidth( text, w, font )
 	
-	if textcache[ font ] != nil and textcache[ font ][ text ] != nil and textcache[ font ][ w ][ text ] != nil then return textcache[ font ][ w ][ text ] end
+	if textcache[ font ] ~= nil and textcache[ font ][ text ] ~= nil and textcache[ font ][ w ][ text ] ~= nil then return textcache[ font ][ w ][ text ] end
 	
 	local str = "…"
 	
@@ -372,7 +372,7 @@ function PANEL:CreateButton( parent, x, y, w, h, res )
 		if self.CurrentAddon == res then color = MenuColor.selected end
 		draw.RoundedBox( 4, 0, 0, w, h, color )
 		
-		if mat != nil then
+		if mat ~= nil then
 			
 			surface.SetDrawColor( MenuColor.white )
 			
@@ -407,8 +407,8 @@ function PANEL:CreateButton( parent, x, y, w, h, res )
 	
 	if istable( res ) == true then
 		
-		if res.name != nil then button:SetText( res.name ) end
-		if res.preview != nil then mat = self:GetMatPath( res.preview ) end
+		if res.name ~= nil then button:SetText( res.name ) end
+		if res.preview ~= nil then mat = self:GetMatPath( res.preview ) end
 		
 	else
 		
@@ -418,8 +418,8 @@ function PANEL:CreateButton( parent, x, y, w, h, res )
 			
 			if IsValid( button ) == true then
 				
-				if info.title != nil then button:SetText( info.title ) end
-				if info.previewid != nil then self:GetMat( info.previewid, function( addonmat ) mat = addonmat end ) end
+				if info.title ~= nil then button:SetText( info.title ) end
+				if info.previewid ~= nil then self:GetMat( info.previewid, function( addonmat ) mat = addonmat end ) end
 				
 			end
 			
@@ -560,7 +560,7 @@ function PANEL:CreateList( itemtype, tags, days, page )
 	docache:SetChecked( self.CacheEnabled )
 	function docache.OnChange( panel, val )
 		
-		if self.CacheEnabled != val then
+		if self.CacheEnabled ~= val then
 			
 			clearcache()
 			
@@ -601,7 +601,7 @@ function PANEL:CreateList( itemtype, tags, days, page )
 	
 	self:GetList( function( data, pages )
 		
-		if IsValid( self ) != true then return end
+		if IsValid( self ) ~= true then return end
 		
 		pages = pages or math.ceil( data.totalresults / items )
 		if IsValid( pagenum ) == true then pagenum:SetText( " / " .. pages ) end
@@ -649,7 +649,7 @@ function PANEL:Publish( path, icon )
 		if title:GetText() == "" then error_:SetText( "You must provide a title!" ) return end
 		
 		local err = self:FinishPublish( path, icon, title:GetText(), description:GetText() )
-		if err != nil then error_:SetText( err ) return end
+		if err ~= nil then error_:SetText( err ) return end
 		
 		panel:Remove()
 		
@@ -676,7 +676,7 @@ function PANEL:CreateInfo( res )
 		
 	end
 	
-	if res != nil then
+	if res ~= nil then
 		
 		local islocal = istable( res )
 		
@@ -692,7 +692,7 @@ function PANEL:CreateInfo( res )
 		local createdby
 		local author
 		
-		if islocal != true then
+		if islocal ~= true then
 			
 			local authorbg = vgui.Create( "DPanel" )
 			authorbg:SetParent( self.info )
@@ -745,7 +745,7 @@ function PANEL:CreateInfo( res )
 		local updatedon
 		local updatetime
 		
-		if islocal != true then
+		if islocal ~= true then
 			
 			updatedon = vgui.Create( "DLabel" )
 			updatedon:SetParent( timebg )
@@ -766,7 +766,7 @@ function PANEL:CreateInfo( res )
 		
 		timebg:SizeToContents()
 		
-		if islocal != true then
+		if islocal ~= true then
 			
 			local desc = vgui.Create( "RichText" )
 			desc:SetParent( self.info )
@@ -778,13 +778,13 @@ function PANEL:CreateInfo( res )
 				
 				if info == nil then return end
 				
-				if IsValid( title ) == true and info.title != nil then
+				if IsValid( title ) == true and info.title ~= nil then
 					
 					title:SetText( info.title )
-					if info.id != nil then function title:DoClick() gui.OpenURL( "http://steamcommunity.com/sharedfiles/filedetails/?id=" .. info.id ) end end
+					if info.id ~= nil then function title:DoClick() gui.OpenURL( "http://steamcommunity.com/sharedfiles/filedetails/?id=" .. info.id ) end end
 					
 				end
-				if info.ownername != nil then
+				if info.ownername ~= nil then
 					
 					if IsValid( createdby ) == true then
 						
@@ -796,12 +796,12 @@ function PANEL:CreateInfo( res )
 						
 						author:SetText( info.ownername )
 						author:SizeToContents()
-						if info.owner != nil then function author:DoClick() gui.OpenURL( "http://steamcommunity.com/profiles/" .. info.owner ) end end
+						if info.owner ~= nil then function author:DoClick() gui.OpenURL( "http://steamcommunity.com/profiles/" .. info.owner ) end end
 						
 					end
 					
 				end
-				if info.created != nil then
+				if info.created ~= nil then
 					
 					if IsValid( createdon ) == true then
 						
@@ -817,7 +817,7 @@ function PANEL:CreateInfo( res )
 					end
 					
 				end
-				if info.updated != nil then
+				if info.updated ~= nil then
 					
 					if IsValid( updatedon ) == true then
 						
@@ -833,7 +833,7 @@ function PANEL:CreateInfo( res )
 					end
 					
 				end
-				if IsValid( desc ) == true and info.description != nil then desc:AppendText( info.description ) end
+				if IsValid( desc ) == true and info.description ~= nil then desc:AppendText( info.description ) end
 				
 			end )
 			
@@ -940,14 +940,14 @@ function PANEL:CreateInfo( res )
 			
 			self:GetVotes( res, function( info )
 				
-				if info.score != nil then votepercent = info.score end
-				if IsValid( uptotal ) == true and info.up != nil then
+				if info.score ~= nil then votepercent = info.score end
+				if IsValid( uptotal ) == true and info.up ~= nil then
 					
 					uptotal:SetText( info.up )
 					uptotal:SizeToContents()
 					
 				end
-				if IsValid( downtotal ) == true and info.down != nil then
+				if IsValid( downtotal ) == true and info.down ~= nil then
 					
 					downtotal:SetText( info.down )
 					downtotal:SizeToContents()
@@ -958,13 +958,13 @@ function PANEL:CreateInfo( res )
 			
 		else
 			
-			if res.name != nil then
+			if res.name ~= nil then
 				
 				title:SetText( res.name )
-				if res.fullpath != nil then function title:DoClick() OpenFolder( string.Trim( string.GetPathFromFilename( res.fullpath ), "/" ) ) end end
+				if res.fullpath ~= nil then function title:DoClick() OpenFolder( string.Trim( string.GetPathFromFilename( res.fullpath ), "/" ) ) end end
 				
 			end
-			if res.time != nil then
+			if res.time ~= nil then
 				
 				createtime:SetText( os.date( "%c", res.time ) )
 				createtime:SizeToContents()
@@ -1042,7 +1042,7 @@ function PANEL:CreateCategories()
 				
 			end
 			
-			if cat[ 2 ] != nil then for _, v in pairs( cat[ 2 ] ) do button[ _ ] = v end end
+			if cat[ 2 ] ~= nil then for _, v in pairs( cat[ 2 ] ) do button[ _ ] = v end end
 			
 			if i_ == #self.Categories[ i ] then
 				
