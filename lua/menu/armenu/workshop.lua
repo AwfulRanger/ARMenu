@@ -223,7 +223,6 @@ function PANEL:GetSubscribed( callback, ugc, page, tags )
 	tags = self:GetTags( tags )
 	
 	local addons
-	
 	if ugc == true then
 		
 		addons = engine.GetUserContent()
@@ -231,6 +230,19 @@ function PANEL:GetSubscribed( callback, ugc, page, tags )
 	else
 		
 		addons = engine.GetAddons()
+		
+	end
+	addons = table.Copy( addons )
+	
+	if tags ~= nil and tags[ 1 ] ~= nil then
+		
+		for i = #addons, 1, -1 do
+			
+			local doremove
+			for i_ = 1, #tags do if string.find( string.lower( addons[ i ].tags ), string.lower( tags[ i_ ] ) ) == nil then doremove = true end end
+			if doremove == true then table.remove( addons, i ) end
+			
+		end
 		
 	end
 	
