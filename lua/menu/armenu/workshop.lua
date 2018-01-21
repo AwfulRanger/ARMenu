@@ -1,4 +1,3 @@
---TODO: search bar
 local PANEL = {}
 
 
@@ -120,9 +119,10 @@ local function clearcache( extra )
 	
 end
 
-function PANEL:GetCachedList( itemtype, tags, page )
+function PANEL:GetCachedList( itemtype, tags, page, search )
 	
 	tags = self:GetTags( tags )
+	search = search or ""
 	
 	if istable( tags ) == true then
 		
@@ -138,17 +138,18 @@ function PANEL:GetCachedList( itemtype, tags, page )
 		
 	end
 	
-	if listcache[ itemtype ] ~= nil and listcache[ itemtype ][ tags ] ~= nil and listcache[ itemtype ][ tags ][ page ] ~= nil then
+	if listcache[ itemtype ] ~= nil and listcache[ itemtype ][ tags ] ~= nil and listcache[ itemtype ][ tags ][ page ] ~= nil and listcache[ itemtype ][ tags ][ page ][ search ] ~= nil then
 		
-		return listcache[ itemtype ][ tags ][ page ], pagescache[ itemtype ][ tags ]
+		return listcache[ itemtype ][ tags ][ page ][ search ], pagescache[ itemtype ][ tags ][ search ]
 		
 	end
 	
 end
 
-function PANEL:CacheList( itemtype, tags, page, data )
+function PANEL:CacheList( itemtype, tags, page, data, search )
 	
 	tags = self:GetTags( tags )
+	search = search or ""
 	
 	if istable( tags ) == true then
 		
@@ -166,16 +167,20 @@ function PANEL:CacheList( itemtype, tags, page, data )
 	
 	local pages = math.ceil( data.totalresults / items )
 	if pagescache[ itemtype ] == nil then pagescache[ itemtype ] = {} end
-	if pagescache[ itemtype ][ tags ] == nil then pagescache[ itemtype ][ tags ] = pages end
-	if self.CacheEnabled == true then pages = pagescache[ itemtype ][ tags ] end
+	if pagescache[ itemtype ][ tags ] == nil then pagescache[ itemtype ][ tags ] = {} end
+	if pagescache[ itemtype ][ tags ][ search ] == nil then pagescache[ itemtype ][ tags ][ search ] = pages end
+	if self.CacheEnabled == true then pages = pagescache[ itemtype ][ tags ][ search ] end
 	
 	if listcache[ itemtype ] == nil then listcache[ itemtype ] = {} end
 	if listcache[ itemtype ][ tags ] == nil then listcache[ itemtype ][ tags ] = {} end
-	listcache[ itemtype ][ tags ][ page ] = data
+	if listcache[ itemtype ][ tags ][ page ] == nil then listcache[ itemtype ][ tags ][ page ] = {} end
+	listcache[ itemtype ][ tags ][ page ][ search ] = data
 	
 end
 
-function PANEL:GetList( callback, itemtype, tags, days, page )
+function PANEL:GetList( callback, itemtype, tags, days, page, search )
+	
+	self.CurrentSearch = search
 	
 	itemtype = itemtype or ""
 	tags = self:GetTags( tags )
@@ -190,33 +195,86 @@ function PANEL:GetList( callback, itemtype, tags, days, page )
 		
 	end
 	
-	if self.CacheEnabled == true then
+	if self.CacheEnabled == true and ( search == nil or search == "" ) then
 		
-		local cacheddata, cachedpages = self:GetCachedList( itemtype, tagstr, page )
+		local cacheddata, cachedpages = self:GetCachedList( itemtype, tagstr, page, search )
 		if cacheddata ~= nil and cachedpages ~= nil then callback( cacheddata, cachedpages ) return end
 		
 	end
 	
-	if itemtype == "local" then self:GetLocal( callback, page ) return end
-	if itemtype == "subscribed" then self:GetSubscribed( callback, false, page, tags ) return end
-	if itemtype == "subscribed_ugc" then self:GetSubscribed( callback, true, page, tags ) return end
+	if itemtype == "local" then self:GetLocal( callback, page, search ) return end
+	if itemtype == "subscribed" then self:GetSubscribed( callback, false, page, tags, search ) return end
+	if itemtype == "subscribed_ugc" then self:GetSubscribed( callback, true, page, tags, search ) return end
 	
 	local id = "0"
 	if itemtype == "mine" then id = "1" end
 	
-	steamworks.GetList( itemtype, tags, items * ( page - 1 ), items, days, id, function( data )
+	if search == nil or search == "" then
 		
-		if self.CacheEnabled == true then self:CacheList( itemtype, tags, page, data ) end
-		callback( data, math.ceil( data.totalresults / items ) )
+		steamworks.GetList( itemtype, tags, items * ( page - 1 ), items, days, id, function( data )
+			
+			if self.CacheEnabled == true then self:CacheList( itemtype, tags, page, data, search ) end
+			callback( data, math.ceil( data.totalresults / items ) )
+			
+		end )
 		
-	end )
+	else
+		
+		--absolutely disgusting
+		
+		local restbl = {}
+		local resdone = 0
+		local function getlist()
+			
+			if search ~= self.CurrentSearch then return end
+			
+			steamworks.GetList( itemtype, tags, ( items * ( page - 1 ) ) + resdone, items, days, id, function( data )
+				
+				if search ~= self.CurrentSearch then return end
+				
+				local infodone = 0
+				for i = 1, #data.results do
+					
+					resdone = resdone + 1
+					self:GetInfo( data.results[ i ], function( info )
+						
+						if search ~= self.CurrentSearch then return end
+						
+						infodone = infodone + 1
+						
+						if #restbl < items and info ~= nil and string.find( string.lower( info.title ), string.lower( search ) ) ~= nil then table.insert( restbl, data.results[ i ] ) end
+						
+						if infodone >= #data.results then
+							
+							if #restbl < items and #data.results >= items then getlist() end
+							
+							callback( {
+								
+								numresults = #restbl,
+								totalresults = #restbl,
+								results = restbl,
+								
+							}, 1 )
+							
+						end
+						
+					end )
+					
+				end
+				
+			end )
+			
+		end
+		getlist( search )
+		
+	end
 	
 end
 
-function PANEL:GetLocal( callback, page )
+function PANEL:GetLocal( callback, page, search )
 end
 
-function PANEL:GetSubscribed( callback, ugc, page, tags )
+function PANEL:GetSubscribed( callback, ugc, page, tags, search )
 	
 	ugc = ugc or false
 	page = page or 1
@@ -234,15 +292,12 @@ function PANEL:GetSubscribed( callback, ugc, page, tags )
 	end
 	addons = table.Copy( addons )
 	
-	if tags ~= nil and tags[ 1 ] ~= nil then
+	for i = #addons, 1, -1 do
 		
-		for i = #addons, 1, -1 do
-			
-			local doremove
-			for i_ = 1, #tags do if string.find( string.lower( addons[ i ].tags ), string.lower( tags[ i_ ] ) ) == nil then doremove = true end end
-			if doremove == true then table.remove( addons, i ) end
-			
-		end
+		local doremove
+		if tags ~= nil then for i_ = 1, #tags do if string.find( string.lower( addons[ i ].tags ), string.lower( tags[ i_ ] ) ) == nil then doremove = true end end end
+		if search ~= nil and search ~= "" and string.find( string.lower( addons[ i ].title ), string.lower( search ) ) == nil then doremove = true end
+		if doremove == true then table.remove( addons, i ) end
 		
 	end
 	
@@ -429,7 +484,7 @@ function PANEL:CreateButton( parent, x, y, w, h, res )
 	
 end
 
-function PANEL:CreateList( itemtype, tags, days, page )
+function PANEL:CreateList( itemtype, tags, days, page, search )
 	
 	if IsValid( self.addons ) == true then self.addons:Remove() end
 	
@@ -497,7 +552,7 @@ function PANEL:CreateList( itemtype, tags, days, page )
 		
 		val = tonumber( val )
 		if val == nil then return end
-		self:CreateList( itemtype, tags, days, math.Clamp( val, panel:GetMin(), panel:GetMax() ) )
+		self:CreateList( itemtype, tags, days, math.Clamp( val, panel:GetMin(), panel:GetMax() ), search )
 		
 	end
 	
@@ -567,7 +622,7 @@ function PANEL:CreateList( itemtype, tags, days, page )
 			RunConsoleCommand( "armenu_cacheworkshop", ( val == true and 1 ) or 0 )
 			self.CacheEnabled = val
 			
-			self:CreateList( itemtype, tags, days, page )
+			self:CreateList( itemtype, tags, days, page, search )
 			
 		end
 		
@@ -592,7 +647,7 @@ function PANEL:CreateList( itemtype, tags, days, page )
 		
 		clearcache( true )
 		
-		self:CreateList( itemtype, tags, days, page )
+		self:CreateList( itemtype, tags, days, page, search )
 		
 	end
 	
@@ -621,7 +676,7 @@ function PANEL:CreateList( itemtype, tags, days, page )
 			
 		end
 		
-	end, itemtype, tags, days, page )
+	end, itemtype, tags, days, page, search )
 	
 end
 
@@ -1019,6 +1074,8 @@ function PANEL:CreateCategories()
 		
 	end
 	
+	local searchbar
+	
 	for i = 1, #self.Categories do
 		
 		for i_ = 1, #self.Categories[ i ] do
@@ -1038,7 +1095,7 @@ function PANEL:CreateCategories()
 				panel:DoClickSound()
 				
 				self:CreateInfo()
-				self:CreateList( cat[ 1 ] )
+				self:CreateList( cat[ 1 ], nil, nil, nil, searchbar:GetValue() )
 				
 			end
 			
@@ -1048,7 +1105,7 @@ function PANEL:CreateCategories()
 				
 				if i == #self.Categories then
 					
-					button:DockMargin( 0, 0, 0, pad * 4 )
+					button:DockMargin( 0, 0, 0, pad * 3 )
 					
 				else
 					
@@ -1059,6 +1116,16 @@ function PANEL:CreateCategories()
 			end
 			
 		end
+		
+	end
+	
+	searchbar = vgui.Create( "DTextEntry" )
+	searchbar:SetParent( self.catbg )
+	searchbar:Dock( TOP )
+	searchbar:DockMargin( 0, 0, 0, pad * 3 )
+	function searchbar.OnChange( panel )
+		
+		self:CreateList( self.CurrentItemType, nil, nil, nil, panel:GetValue() )
 		
 	end
 	
@@ -1074,7 +1141,7 @@ function PANEL:CreateCategories()
 		function check.OnChange( panel, val )
 			
 			self.ExtraTags[ self.TagSelect[ i ] ] = val
-			self:CreateList( self.CurrentItemType )
+			self:CreateList( self.CurrentItemType, nil, nil, nil, searchbar:GetValue() )
 			
 		end
 		
