@@ -228,7 +228,7 @@ function PANEL:GetList( callback, itemtype, tags, days, page, search )
 			
 			if search ~= self.CurrentSearch then return end
 			
-			steamworks.GetList( itemtype, tags, ( items * ( page - 1 ) ) + resdone, items, days, id, function( data )
+			steamworks.GetList( itemtype, tags, resdone, items, days, id, function( data )
 				
 				if search ~= self.CurrentSearch then return end
 				
