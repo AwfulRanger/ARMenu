@@ -264,7 +264,7 @@ function PANEL:GetList( callback, itemtype, tags, days, page, search )
 			
 			steamworks.GetList( itemtype, tags, self.SearchesDone, 50, days, id, function( data )
 				
-				if IsValid( self ) ~= true then return end
+				if IsValid( self ) ~= true or data == nil then return end
 				
 				if search ~= self.CurrentSearch then
 					
@@ -302,7 +302,7 @@ function PANEL:GetList( callback, itemtype, tags, days, page, search )
 						
 						infodone = infodone + 1
 						
-						if info ~= nil and self.Searched[ data.results[ i ] ] ~= true and ( string.find( string.lower( info.title ), string.lower( search ) ) ~= nil or string.find( string.lower( info.description ), string.lower( search ) ) ~= nil ) then
+						if info ~= nil and self.Searched[ data.results[ i ] ] ~= true and ( string.find( string.lower( info.title ), string.lower( search ), nil, true ) ~= nil or string.find( string.lower( info.description ), string.lower( search ), nil, true ) ~= nil ) then
 							
 							self.Searched[ data.results[ i ] ] = true
 							
@@ -366,7 +366,7 @@ function PANEL:GetSubscribed( callback, ugc, page, tags, search )
 		
 		local doremove
 		if tags ~= nil then for i_ = 1, #tags do if string.find( string.lower( addons[ i ].tags ), string.lower( tags[ i_ ] ) ) == nil then doremove = true end end end
-		if search ~= nil and search ~= "" and string.find( string.lower( addons[ i ].title ), string.lower( search ) ) == nil then doremove = true end
+		if search ~= nil and search ~= "" and string.find( string.lower( addons[ i ].title ), string.lower( search ), nil, true ) == nil then doremove = true end
 		if doremove == true then table.remove( addons, i ) end
 		
 	end
