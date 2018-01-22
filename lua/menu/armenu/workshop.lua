@@ -178,8 +178,20 @@ function PANEL:CacheList( itemtype, tags, page, data, search )
 	
 end
 
+PANEL.SearchResults = {}
+PANEL.SearchesDone = 0
+PANEL.Searching = false
+PANEL.Searched = {}
 function PANEL:GetList( callback, itemtype, tags, days, page, search )
 	
+	if search ~= self.CurrentSearch then
+		
+		self.SearchResults = {}
+		self.SearchesDone = 0
+		self.Searching = false
+		self.Searched = {}
+		
+	end
 	self.CurrentSearch = search
 	
 	itemtype = itemtype or ""
@@ -222,41 +234,94 @@ function PANEL:GetList( callback, itemtype, tags, days, page, search )
 		
 		--absolutely disgusting
 		
-		local restbl = {}
-		local resdone = 0
+		local pagetbl = {}
+		for i = 1, math.min( items, #self.SearchResults - ( items * ( page - 1 ) ) ) do table.insert( pagetbl, self.SearchResults[ i + ( items * ( page - 1 ) ) ] ) end
+		
+		callback( {
+			
+			numresults = #pagetbl,
+			totalresults = #self.SearchResults,
+			results = pagetbl,
+			
+		}, math.ceil( #self.SearchResults / items ) )
+		
 		local function getlist()
 			
-			if search ~= self.CurrentSearch then return end
+			if IsValid( self ) ~= true then return end
 			
-			steamworks.GetList( itemtype, tags, resdone, items, days, id, function( data )
+			if search ~= self.CurrentSearch then
 				
-				if search ~= self.CurrentSearch then return end
+				self.SearchResults = {}
+				self.SearchesDone = 0
+				self.Searching = false
+				self.Searched = {}
+				
+				return
+				
+			end
+			
+			self.Searching = true
+			
+			steamworks.GetList( itemtype, tags, self.SearchesDone, 50, days, id, function( data )
+				
+				if IsValid( self ) ~= true then return end
+				
+				if search ~= self.CurrentSearch then
+					
+					self.SearchResults = {}
+					self.SearchesDone = 0
+					self.Searching = false
+					self.Searched = {}
+					
+					return
+					
+				end
+				
+				self.Searching = true
 				
 				local infodone = 0
 				for i = 1, #data.results do
 					
-					resdone = resdone + 1
+					self.SearchesDone = self.SearchesDone + 1
 					self:GetInfo( data.results[ i ], function( info )
 						
-						if search ~= self.CurrentSearch then return end
+						if IsValid( self ) ~= true then return end
+						
+						if search ~= self.CurrentSearch then
+							
+							self.SearchResults = {}
+							self.SearchesDone = 0
+							self.Searching = false
+							self.Searched = {}
+							
+							return
+							
+						end
+						
+						self.Searching = true
 						
 						infodone = infodone + 1
 						
-						if #restbl < items and info ~= nil and string.find( string.lower( info.title ), string.lower( search ) ) ~= nil then table.insert( restbl, data.results[ i ] ) end
-						
-						if infodone >= #data.results then
+						if info ~= nil and self.Searched[ data.results[ i ] ] ~= true and ( string.find( string.lower( info.title ), string.lower( search ) ) ~= nil or string.find( string.lower( info.description ), string.lower( search ) ) ~= nil ) then
 							
-							if #restbl < items and #data.results >= items then getlist() end
+							self.Searched[ data.results[ i ] ] = true
+							
+							table.insert( self.SearchResults, data.results[ i ] )
+							
+							local pagetbl = {}
+							for i = 1, math.min( items, #self.SearchResults - ( items * ( page - 1 ) ) ) do table.insert( pagetbl, self.SearchResults[ i + ( items * ( page - 1 ) ) ] ) end
 							
 							callback( {
 								
-								numresults = #restbl,
-								totalresults = #restbl,
-								results = restbl,
+								numresults = #pagetbl,
+								totalresults = #self.SearchResults,
+								results = pagetbl,
 								
-							}, 1 )
+							}, math.ceil( #self.SearchResults / items ) )
 							
 						end
+						
+						if infodone >= #data.results and #data.results >= 50 then getlist() end
 						
 					end )
 					
@@ -265,7 +330,12 @@ function PANEL:GetList( callback, itemtype, tags, days, page, search )
 			end )
 			
 		end
-		getlist( search )
+		if self.Searching ~= true then
+			
+			getlist( search )
+			self.Searching = true
+			
+		end
 		
 	end
 	
@@ -482,6 +552,8 @@ function PANEL:CreateButton( parent, x, y, w, h, res )
 		
 	end
 	
+	return button
+	
 end
 
 function PANEL:CreateList( itemtype, tags, days, page, search )
@@ -654,6 +726,8 @@ function PANEL:CreateList( itemtype, tags, days, page, search )
 	local grid = 5
 	local size = ( h * ( 1 / grid ) ) - ( sep * ( 1 - ( 1 / grid ) ) )
 	
+	local lastnum = 0
+	local createdbuttons = {}
 	self:GetList( function( data, pages )
 		
 		if IsValid( self ) ~= true then return end
@@ -662,17 +736,30 @@ function PANEL:CreateList( itemtype, tags, days, page, search )
 		if IsValid( pagenum ) == true then pagenum:SetText( " / " .. pages ) end
 		if IsValid( wang ) == true then wang:SetMax( pages ) end
 		
-		for i = 1, data.numresults do
+		if lastnum ~= data.numresults then
 			
-			local res = data.results[ i ]
+			for i = 1, #createdbuttons do
+				
+				if IsValid( createdbuttons[ i ] ) == true then createdbuttons[ i ]:Remove() end
+				createdbuttons[ i ] = nil
+				
+			end
 			
-			local row = ( i - 1 ) % grid
-			local col = math.floor( ( i - 1 ) / grid )
+			for i = 1, data.numresults do
+				
+				local res = data.results[ i ]
+				
+				local row = ( i - 1 ) % grid
+				local col = math.floor( ( i - 1 ) / grid )
+				
+				local x = ( size + sep ) * row
+				local y = ( size + sep ) * col
+				
+				table.insert( createdbuttons, self:CreateButton( addonsbg, x, y, size, size, res ) )
+				
+			end
 			
-			local x = ( size + sep ) * row
-			local y = ( size + sep ) * col
-			
-			self:CreateButton( addonsbg, x, y, size, size, res )
+			lastnum = data.numresults
 			
 		end
 		
