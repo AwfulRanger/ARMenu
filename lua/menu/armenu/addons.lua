@@ -51,6 +51,40 @@ function PANEL:Init()
 	
 end
 
+local notsubscribed = Material( "html/img/notinstalled.png" )
+local unmounted = Material( "html/img/notowned.png" )
+local mounted = Material( "html/img/enabled.png" )
+
+function PANEL:CreateButton( parent, x, y, w, h, res, ... )
+	
+	local button = self.BaseClass.CreateButton( self, parent, x, y, w, h, res, ... )
+	local paint = button.Paint
+	function button:Paint( w, h, ... )
+		
+		local ret = paint( self, w, h, ... )
+		
+		local spad = math.Round( h * 0.1 )
+		local s = math.min( 16, h - ( spad * 2 ) )
+		local bgpad = math.min( 2, h )
+		
+		local mat = mounted
+		if steamworks.ShouldMountAddon( res ) ~= true then mat = unmounted end
+		if steamworks.IsSubscribed( res ) ~= true then mat = notsubscribed end
+		
+		draw.RoundedBox( 4, w - s - spad - bgpad, h - s - spad - bgpad, s + ( bgpad * 2 ), s + ( bgpad * 2 ), MenuColor.bgdim )
+		
+		surface.SetDrawColor( MenuColor.white )
+		surface.SetMaterial( mat )
+		surface.DrawTexturedRect( w - s - spad, h - s - spad, s, s )
+		
+		return ret
+		
+	end
+	
+	return button
+	
+end
+
 function PANEL:CreateInfo( res, ... )
 	
 	self.BaseClass.CreateInfo( self, res, ... )

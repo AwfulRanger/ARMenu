@@ -500,7 +500,6 @@ function PANEL:CreateButton( parent, x, y, w, h, res )
 		if mat ~= nil then
 			
 			surface.SetDrawColor( MenuColor.white )
-			
 			surface.SetMaterial( mat )
 			surface.DrawTexturedRect( pad, pad, w - ( pad * 2 ), h - ( pad * 2 ) )
 			
