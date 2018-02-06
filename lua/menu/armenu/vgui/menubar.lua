@@ -292,8 +292,6 @@ local function createbuttons( canvas )
 			self:DoClickSound()
 			
 			local size = math.Round( ScrH() * 0.02 )
-			local sep = math.Round( size * 0.5 )
-			local pad = math.Round( size * 0.25 )
 			
 			self.popup = vgui.Create( "GamemodeMenu" )
 			self.popup.owner = self

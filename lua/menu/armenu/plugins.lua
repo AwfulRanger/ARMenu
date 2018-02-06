@@ -97,16 +97,15 @@ hook.Add( "PreCreateMenuBarButtons", "Plugins", function()
 			self:DoClickSound()
 			
 			local size = math.Round( ScrH() * 0.02 )
-			local sep = math.Round( size * 0.5 )
-			local pad = math.Round( size * 0.25 )
+			local sep = math.Round( size * 0.25 )
 			
 			self.popup = vgui.Create( "DPanel" )
 			self.popup:SetParent( GetMainMenu() )
 			self.popup:SetSize( ScrW() * 0.15, ScrH() * 0.3 )
 			local x, y = self:GetPos()
 			local bx, by = self:GetParent():GetPos()
-			x = bx + x + self:GetWide() - self.popup:GetWide() - ( size * 0.5 )
-			y = by - self.popup:GetTall() - ( size * 0.5 )
+			x = bx + x + self:GetWide() - self.popup:GetWide() - ( size * 0.5 ) - sep
+			y = by - self.popup:GetTall() - ( size * 0.5 ) - sep
 			self.popup:SetPos( x, y )
 			function self.popup:Paint( w, h )
 				
@@ -132,7 +131,7 @@ hook.Add( "PreCreateMenuBarButtons", "Plugins", function()
 				panel:SetParent( bgpanel )
 				panel:Dock( TOP )
 				panel:DockPadding( dock, dock, dock, dock )
-				panel:DockMargin( pad, pad, pad, 0 )
+				panel:DockMargin( sep, sep, sep, 0 )
 				panel:SetTall( ScrH() * 0.1 )
 				function panel:Paint( w, h )
 					
@@ -199,7 +198,7 @@ hook.Add( "PreCreateMenuBarButtons", "Plugins", function()
 			
 			bgpanel:InvalidateLayout( true )
 			bgpanel:SizeToChildren( false, true )
-			bgpanel:SetTall( bgpanel:GetTall() + pad )
+			bgpanel:SetTall( bgpanel:GetTall() + sep )
 			
 			GetMainMenu():SetPopup( self.popup )
 			
