@@ -1,5 +1,4 @@
 --TODO: make (un)favoriting a map not jitter everything around
---TODO: search bar
 --TODO: fix leftover map panel (?????)
 local PANEL = {}
 
@@ -12,7 +11,7 @@ local addfavmat = Material( "html/img/favourite_add.png" )
 local remfavmat = Material( "html/img/favourite_remove.png" )
 
 local currentmap
-local currentcat = "Favourites"
+local currentcat
 
 local maxplayers_help = "Change the maximum number of players allowed on this server."
 local hostname_help = GetConVar( "hostname" ):GetHelpText()
@@ -46,6 +45,8 @@ local function newcategory( name, tbl, parent )
 	local num = 0
 	if tbl ~= nil then num = #tbl end
 	
+	if num <= 0 then return end
+	
 	local button = vgui.Create( "SoundButton" )
 	button:SetParent( parent )
 	button:Dock( TOP )
@@ -78,42 +79,69 @@ local function newcategory( name, tbl, parent )
 		
 		self:DoClickSound()
 		
-		parent:GetParent():CreateMapList( name )
-		currentcat = name
+		parent:GetParent():GetParent():CreateMapList( name, tbl )
 		
 	end
+	button.category = name
 	
 	return button
 	
 end
 
+local scroll
+local function createcategories( maplist, query, panel )
+	
+	if IsValid( scroll ) == true then scroll:Remove() end
+	
+	if maplist == nil then maplist = GetMapList() or {} end
+	if query ~= nil then
+		
+		maplist = table.Copy( maplist )
+		local remove = {}
+		for _, v in pairs( maplist ) do for i = #v, 1, -1 do if string.find( v[ i ], query, nil, true ) == nil then table.insert( remove, { v, i } ) end end end
+		for i = 1, #remove do table.remove( remove[ i ][ 1 ], remove[ i ][ 2 ] ) end
+		
+	end
+	
+	scroll = vgui.Create( "DScrollPanel" )
+	scroll:SetParent( panel )
+	scroll:Dock( FILL )
+	panel.scroll = scroll
+	
+	newcategory( "Favourites", maplist.Favourites, scroll )
+	newcategory( "Sandbox", maplist.Sandbox, scroll )
+	
+	for _, v in SortedPairs( maplist ) do if _ ~= "Favourites" and _ ~= "Sandbox" then newcategory( _, v, scroll ) end end
+	
+	if currentcat ~= nil then panel:GetParent():CreateMapList( currentcat, maplist[ currentcat] ) end
+	
+end
 function PANEL:CreateMapCategories( maplist )
 	
 	if IsValid( self.category ) == true then self.category:Remove() end
 	
 	if maplist == nil then maplist = GetMapList() or {} end
 	
-	self.category = vgui.Create( "DScrollPanel" )
+	self.category = vgui.Create( "DPanel" )
 	self.category:SetParent( self )
 	self.category:Dock( LEFT )
 	self.category:SetWide( ScrW() * 0.125 )
+	function self.category:Paint( w, h ) end
 	
-	local fav = newcategory( "Favourites", maplist.Favourites, self.category )
-	local sb = newcategory( "Sandbox", maplist.Sandbox, self.category )
+	createcategories( maplist, nil, self.category )
 	
-	for _, v in SortedPairs( maplist ) do
+	local searchbar = vgui.Create( "DTextEntry" )
+	searchbar:SetParent( self.category )
+	searchbar:Dock( BOTTOM )
+	function searchbar.OnChange( panel )
 		
-		if _ ~= "Favourites" and _ ~= "Sandbox" then
-			
-			local cat = newcategory( _, v, self.category )
-			
-		end
+		createcategories( nil, panel:GetValue(), self.category )
 		
 	end
 	
 end
 
-function PANEL:CreateMapList( category )
+function PANEL:CreateMapList( category, maplist )
 	
 	if IsValid( self.maps ) == true then self.maps:Remove() end
 	
@@ -122,8 +150,15 @@ function PANEL:CreateMapList( category )
 		if IsValid( self ) ~= true then return end
 		
 		if category == nil then category = currentcat end
+		if category == nil then
+			
+			local first = self.category.scroll:GetCanvas():GetChildren()[ 1 ]
+			if IsValid( first ) == true then category = first.category end
+			
+		end
 		if category == nil then category = "Favourites" end
-		local maplist = GetMapList()[ category ] or {}
+		if maplist == nil then maplist = GetMapList()[ category ] or {} end
+		currentcat = category
 		
 		self.maps = vgui.Create( "DScrollPanel" )
 		self.maps:SetParent( self )
