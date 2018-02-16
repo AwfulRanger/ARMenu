@@ -2,7 +2,7 @@ include( "plugins.lua" )
 
 include( "../background.lua" )
 include( "../cef_credits.lua" )
-include( "../openurl.lua" )
+include( "openurl.lua" )
 
 MenuColor = {
 	
