@@ -16,6 +16,7 @@ MenuColor = {
 	fg_alt = Color( 0, 0, 0, 255 ),
 	bg_alt = Color( 255, 255, 255, 255 ),
 	bgdim = Color( 0, 0, 0, 200 ),
+	bgdim_alt = Color( 200, 200, 200, 200 ),
 	dullinactive = Color( 255, 255, 255, 10 ),
 	dullactive = Color( 255, 255, 255, 50 ),
 	bgdull = Color( 220, 220, 220, 255 ),

@@ -6,6 +6,10 @@ language.Add( "armenu_addonsubscribe", "Subscribe" )
 language.Add( "armenu_addonunsubscribe", "Unsubscribe" )
 language.Add( "armenu_addonmount", "Mount" )
 language.Add( "armenu_addonunmount", "Unmount" )
+language.Add( "armenu_addonsubscribeselected", "Subscribe selected" )
+language.Add( "armenu_addonunsubscribeselected", "Unsubscribe selected" )
+language.Add( "armenu_addonmountselected", "Mount selected" )
+language.Add( "armenu_addonunmountselected", "Unmount selected" )
 
 function PANEL:Init()
 	
@@ -49,11 +53,14 @@ function PANEL:Init()
 		
 	}
 	
+	self.SelectedAddons = {}
+	
 end
 
 local notsubscribed = Material( "html/img/notinstalled.png" )
 local unmounted = Material( "html/img/notowned.png" )
 local mounted = Material( "html/img/enabled.png" )
+local checkmat = Material( "html/img/enabled.png" )
 
 function PANEL:CreateButton( parent, x, y, w, h, res, ... )
 	
@@ -78,6 +85,60 @@ function PANEL:CreateButton( parent, x, y, w, h, res, ... )
 		surface.DrawTexturedRect( w - s - spad, h - s - spad, s, s )
 		
 		return ret
+		
+	end
+	
+	local check = vgui.Create( "DCheckBox" )
+	check:SetParent( button )
+	check:SetChecked( self.SelectedAddons[ res ] == true )
+	function check.OnChange( panel, new )
+		
+		self.SelectedAddons[ res ] = new or nil
+		
+	end
+	function check:Paint( w, h )
+		
+		local checked = self:GetChecked()
+		
+		surface.SetDrawColor( MenuColor.bgdim_alt )
+		if checked == true then surface.SetDrawColor( MenuColor.selected ) end
+		surface.DrawRect( 0, 0, w, h )
+		
+		if checked == true then
+			
+			local s = math.min( 16, w, h )
+			surface.SetDrawColor( MenuColor.white )
+			surface.SetMaterial( checkmat )
+			surface.DrawTexturedRect( ( w * 0.5 ) - ( s * 0.5 ), ( h * 0.5 ) - ( s * 0.5 ), s, s )
+			
+		end
+		
+		surface.SetDrawColor( MenuColor.fg_alt )
+		surface.DrawOutlinedRect( 0, 0, w, h )
+		
+	end
+	
+	local buttondoclick = button.DoClick
+	function button.DoClick( ... )
+		
+		if input.IsShiftDown() == true then
+			
+			check:Toggle()
+			
+		else
+			
+			buttondoclick( ... )
+			
+		end
+		
+	end
+	function button:PerformLayout( w, h )
+		
+		local spad = math.Round( h * 0.1 )
+		local s = math.min( 16, h - ( spad * 2 ) )
+		
+		check:SetPos( spad, h - s - spad )
+		check:SetSize( s, s )
 		
 	end
 	
@@ -172,6 +233,130 @@ function PANEL:CreateInfo( res, ... )
 			if IsValid( self ) == true then self:CreateInfo( res ) end
 			
 		end )
+		
+	end
+	
+end
+
+function PANEL:CreateCategories( ... )
+	
+	self.BaseClass.CreateCategories( self, ... )
+	
+	local pad = ScrH() * 0.01
+	
+	local unmount = vgui.Create( "SoundButton" )
+	unmount:SetParent( self.catbg )
+	unmount:Dock( BOTTOM )
+	unmount:DockMargin( 0, 0, 0, pad )
+	unmount:SetTall( ScrH() * 0.025 )
+	unmount:SetFont( "DermaDefaultBold" )
+	unmount:SetText( "#armenu_addonunmountselected" )
+	function unmount:Paint( w, h )
+		
+		local color = MenuColor.bg_alt
+		if self:IsHovered() == true then color = MenuColor.active end
+		if self:IsDown() == true then color = MenuColor.selected end
+		draw.RoundedBox( 4, 0, 0, w, h, color )
+		
+	end
+	function unmount.DoClick( button )
+		
+		button:DoClickSound()
+		
+		for _, v in pairs( self.SelectedAddons ) do
+			
+			if v == true then steamworks.SetShouldMountAddon( _, false ) end
+			
+		end
+		
+		steamworks.ApplyAddons()
+		
+	end
+	
+	local mount = vgui.Create( "SoundButton" )
+	mount:SetParent( self.catbg )
+	mount:Dock( BOTTOM )
+	mount:DockMargin( 0, 0, 0, pad )
+	mount:SetTall( ScrH() * 0.025 )
+	mount:SetFont( "DermaDefaultBold" )
+	mount:SetText( "#armenu_addonmountselected" )
+	function mount:Paint( w, h )
+		
+		local color = MenuColor.bg_alt
+		if self:IsHovered() == true then color = MenuColor.active end
+		if self:IsDown() == true then color = MenuColor.selected end
+		draw.RoundedBox( 4, 0, 0, w, h, color )
+		
+	end
+	function mount.DoClick( button )
+		
+		button:DoClickSound()
+		
+		for _, v in pairs( self.SelectedAddons ) do
+			
+			if v == true then steamworks.SetShouldMountAddon( _, true ) end
+			
+		end
+		
+		steamworks.ApplyAddons()
+		
+	end
+	
+	local unsubscribe = vgui.Create( "SoundButton" )
+	unsubscribe:SetParent( self.catbg )
+	unsubscribe:Dock( BOTTOM )
+	unsubscribe:DockMargin( 0, 0, 0, pad )
+	unsubscribe:SetTall( ScrH() * 0.025 )
+	unsubscribe:SetFont( "DermaDefaultBold" )
+	unsubscribe:SetText( "#armenu_addonunsubscribeselected" )
+	function unsubscribe:Paint( w, h )
+		
+		local color = MenuColor.bg_alt
+		if self:IsHovered() == true then color = MenuColor.active end
+		if self:IsDown() == true then color = MenuColor.selected end
+		draw.RoundedBox( 4, 0, 0, w, h, color )
+		
+	end
+	function unsubscribe.DoClick( button )
+		
+		button:DoClickSound()
+		
+		for _, v in pairs( self.SelectedAddons ) do
+			
+			if v == true then steamworks.Unsubscribe( _ ) end
+			
+		end
+		
+		steamworks.ApplyAddons()
+		
+	end
+	
+	local subscribe = vgui.Create( "SoundButton" )
+	subscribe:SetParent( self.catbg )
+	subscribe:Dock( BOTTOM )
+	subscribe:DockMargin( 0, 0, 0, pad )
+	subscribe:SetTall( ScrH() * 0.025 )
+	subscribe:SetFont( "DermaDefaultBold" )
+	subscribe:SetText( "#armenu_addonsubscribeselected" )
+	function subscribe:Paint( w, h )
+		
+		local color = MenuColor.bg_alt
+		if self:IsHovered() == true then color = MenuColor.active end
+		if self:IsDown() == true then color = MenuColor.selected end
+		draw.RoundedBox( 4, 0, 0, w, h, color )
+		
+	end
+	function subscribe.DoClick( button )
+		
+		button:DoClickSound()
+		
+		for _, v in pairs( self.SelectedAddons ) do
+			
+			if v == true then steamworks.Subscribe( _ ) end
+			
+		end
+		
+		steamworks.ApplyAddons()
 		
 	end
 	
